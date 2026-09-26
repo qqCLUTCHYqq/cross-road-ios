@@ -1,0 +1,29 @@
+{
+  "original": {
+    "label": "original-memory64",
+    "constructors": 101,
+    "jniVersion": "10004",
+    "memoryBytes": 67108864,
+    "memoryHash": "5a32f6dd057b2b5dc4cdb5b5735d93afac0478aa371bbb1d6c14323f12488433",
+    "messages": [
+      {
+        "type": "log",
+        "line": "PASS: compiled 1491 ms, one browser-only dispatch import"
+      }
+    ]
+  },
+  "converted": {
+    "label": "converted-memory32",
+    "constructors": 101,
+    "jniVersion": "10004",
+    "memoryBytes": 67108864,
+    "memoryHash": "5a32f6dd057b2b5dc4cdb5b5735d93afac0478aa371bbb1d6c14323f12488433",
+    "messages": [
+      {
+        "type": "log",
+        "line": "PASS: compiled 1539 ms, one browser-only dispatch import"
+      }
+    ]
+  },
+  "note": "Node/V8 native initialization with no canvas or game content; not an iPhone or WebKit test. Memory hashes can differ because constructors use clock/random values."
+}

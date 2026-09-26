@@ -66,7 +66,12 @@ final class GameViewController: UIViewController, WKNavigationDelegate, WKScript
         do {
             try server?.start { result in
                 switch result {
-                case .success(let url): self.baseURL = url; self.launchGame()
+                case .success(let url):
+                    self.baseURL = url
+                    if ProcessInfo.processInfo.arguments.contains("--boot-diagnostic") {
+                        self.status.text = nil
+                        self.webView.load(URLRequest(url: URL(string: "index.html?autoRun=1", relativeTo: url)!.absoluteURL))
+                    } else { self.launchGame() }
                 case .failure(let error): self.fail("Local runtime server: \(error.localizedDescription)")
                 }
             }
@@ -140,6 +145,13 @@ final class GameViewController: UIViewController, WKNavigationDelegate, WKScript
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) { fail(error.localizedDescription) }
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) { fail("iOS stopped the game process, possibly due to memory pressure. Use Game options to restart and share the log.") }
     @objc private func flushSaves() { webView?.evaluateJavaScript("globalThis.__nativeFlush?.()", completionHandler: nil) }
-    private func record(_ text: String) { logLines.append(String(text.prefix(4000))); if logLines.count > 300 { logLines.removeFirst(logLines.count - 300) } }
+    private func record(_ text: String) {
+        logLines.append(String(text.prefix(4000)))
+        if logLines.count > 300 { logLines.removeFirst(logLines.count - 300) }
+        if ProcessInfo.processInfo.arguments.contains("--boot-diagnostic") {
+            let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            try? logLines.joined(separator: "\n").write(to: folder.appendingPathComponent("boot-test.txt"), atomically: true, encoding: .utf8)
+        }
+    }
     private func fail(_ text: String) { record(text); status.text = text + "\n\nUse Game options (•••) to share the startup log." }
 }

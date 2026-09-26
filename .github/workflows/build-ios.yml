@@ -1,16 +1,23 @@
 name: Build iPhone IPA
 on:
   workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish an experimental unsigned IPA release
+        type: boolean
+        default: false
   push:
     branches: [main]
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Verify ranged file adapter
+        run: node scripts/test-native-files.cjs
       - name: Build app and package IPA
         run: bash scripts/build-ipa.sh
       - name: Upload sideloading package
@@ -20,3 +27,28 @@ jobs:
           path: dist/*
           if-no-files-found: error
           retention-days: 30
+      - name: iOS Simulator runtime initialization
+        id: smoke
+        continue-on-error: true
+        run: bash scripts/simulator-smoke.sh
+      - name: Upload simulator evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrossRoad-simulator-evidence
+          path: build/smoke/*
+          if-no-files-found: warn
+      - name: Publish experimental sideloading download
+        if: github.event_name == 'workflow_dispatch' && inputs.publish && steps.smoke.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v0.1.0-test.${GITHUB_RUN_NUMBER}"
+          cat > build/release-notes.md <<'NOTES'
+          Experimental iPhone build. Sign/install CrossRoad-unsigned.ipa with your sideloading tool; a browser download alone does not install it.
+
+          Includes the local preservation runtime and a Home Screen icon. Import the extracted compatible Content folder once from Game options. Content is not included.
+
+          Compiled for physical iOS devices. Full game behavior and device compatibility are not yet verified; report the startup log if it fails. This is not a finished gameplay release.
+          NOTES
+          gh release create "$TAG" dist/CrossRoad-unsigned.ipa dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Cross Road iPhone — experimental ${GITHUB_RUN_NUMBER}" --notes-file build/release-notes.md --prerelease

@@ -30,4 +30,5 @@ document.getElementById('test').addEventListener('click',()=>{
 document.getElementById('download').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([logBox.textContent],{type:'text/plain'})),a=document.createElement('a');a.href=url;a.download='khux-safari-diagnostic.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);});
 
 log("Diagnostic script loaded.");
+if(new URLSearchParams(location.search).has('autoRun'))document.getElementById('test').click();
 })();

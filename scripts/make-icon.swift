@@ -8,7 +8,7 @@ let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: size, pixelsHig
 NSGraphicsContext.saveGraphicsState()
 NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
 NSColor(calibratedRed: 0.06, green: 0.09, blue: 0.14, alpha: 1).setFill()
-NSBezierPath(rect: NSRect(x: 0, y: 0, width: size, height: size)).fill()
+NSBezierPath(rect: NSRect(x: 0, y: 0, width: CGFloat(size), height: CGFloat(size))).fill()
 image.draw(in: NSRect(x: 64, y: 64, width: 896, height: 896))
 NSGraphicsContext.restoreGraphicsState()
 let folder = root.appendingPathComponent("CrossRoad/Assets.xcassets/AppIcon.appiconset")
@@ -18,3 +18,4 @@ let contents = """
 {"images":[{"filename":"AppIcon.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"xcode","version":1}}
 """
 try Data(contents.utf8).write(to: folder.appendingPathComponent("Contents.json"))
+

@@ -2,7 +2,7 @@
 
 A native iOS application target for the uploaded KHUX/Dark Road Cross Road preservation runtime. It has a Home Screen icon and hosts the bundled runtime inside WKWebView. It does not open Safari or install a PWA. The game still renders through WebKit's WebGL implementation.
 
-**Status:** app source and build workflow prepared; iOS compilation/device gameplay must be verified by a successful build and an actual iPhone test. The original and converted WASM passed 101 native constructors and JNI initialization in local Node/Chromium tests. Those tests do not prove iOS gameplay.
+**Status:** the first physical-iOS archive/IPA build succeeded on GitHub Actions. The workflow also checks native runtime initialization in an iOS Simulator before publishing an experimental release. Full gameplay still requires testing on an actual iPhone with game content. The original and converted WASM passed 101 native constructors and JNI initialization in local Node/Chromium tests; those tests alone do not prove iOS gameplay.
 
 ## Download and install
 
