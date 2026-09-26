@@ -47,7 +47,7 @@ jobs:
           cat > build/release-notes.md <<'NOTES'
           Experimental iPhone build. Sign/install CrossRoad-unsigned.ipa with your sideloading tool; a browser download alone does not install it.
 
-          Includes the local preservation runtime and a Home Screen icon. Import the extracted compatible Content folder once from Game options. Content is not included.
+          Includes the local preservation runtime and a Home Screen icon. On first launch, choose Download game content (2.24 GB over Wi-Fi), or import an extracted compatible Content folder. Content is stored locally after setup; it is not bundled in this IPA.
 
           Compiled for physical iOS devices. Full game behavior and device compatibility are not yet verified; report the startup log if it fails. This is not a finished gameplay release.
           NOTES

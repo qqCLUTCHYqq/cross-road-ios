@@ -11,6 +11,7 @@ final class GameViewController: UIViewController, WKNavigationDelegate, WKScript
     private let menu = UIButton(type: .system)
     private var logLines: [String] = []
     private var importing = false
+    private var installer: ContentInstaller?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +82,7 @@ final class GameViewController: UIViewController, WKNavigationDelegate, WKScript
     private func launchGame() {
         guard let baseURL else { return }
         guard content.hasContent else {
-            status.text = "Cross Road\n\nImport your extracted Content folder once using Game options (•••).\nAfter setup, the game opens directly from this icon."
+            status.text = "Cross Road\n\nUse Game options (•••) to download game content (2.24 GB over Wi-Fi) or import an existing folder.\nAfter setup, the game opens directly from this icon."
             return
         }
         status.text = "Starting Cross Road…"
@@ -91,6 +92,7 @@ final class GameViewController: UIViewController, WKNavigationDelegate, WKScript
     @objc private func showOptions() {
         guard !importing else { return }
         let sheet = UIAlertController(title: "Cross Road", message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Download game content (2.24 GB)", style: .default) { _ in self.downloadContent() })
         sheet.addAction(UIAlertAction(title: "Import extracted Content folder", style: .default) { _ in
             let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.folder], asCopy: false)
             picker.delegate = self; picker.allowsMultipleSelection = false
@@ -108,6 +110,25 @@ final class GameViewController: UIViewController, WKNavigationDelegate, WKScript
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         sheet.popoverPresentationController?.sourceView = menu
         present(sheet, animated: true)
+    }
+
+    private func downloadContent() {
+        let alert = UIAlertController(title: "Download game content", message: "Download 2.24 GB from the preservation archive over Wi-Fi, then unpack it locally. Allow several GB of free space and keep the app open during setup.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Download", style: .default) { _ in
+            self.importing = true
+            self.webView.loadHTMLString("", baseURL: nil)
+            UIApplication.shared.isIdleTimerDisabled = true
+            self.installer = ContentInstaller(store: self.content, update: { [weak self] text in self?.status.text = text }, completion: { [weak self] error in
+                guard let self else { return }
+                self.importing = false; self.installer = nil
+                UIApplication.shared.isIdleTimerDisabled = false
+                if let error { self.fail("Content setup failed: \(error.localizedDescription)") }
+                else { self.launchGame() }
+            })
+            self.installer?.start()
+        })
+        present(alert, animated: true)
     }
 
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {

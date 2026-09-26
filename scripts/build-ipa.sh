@@ -3,6 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 swift scripts/make-icon.swift "$PWD"
 node scripts/generate-project.cjs
+curl --fail --location --retry 3 https://raw.githubusercontent.com/weichsel/ZIPFoundation/0.9.20/LICENSE -o CrossRoad/Web/ZIPFoundation-LICENSE.txt
 xcodebuild -project CrossRoad.xcodeproj -scheme CrossRoad -configuration Release \
   -sdk iphoneos -destination 'generic/platform=iOS' -archivePath "$PWD/build/CrossRoad.xcarchive" \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO archive

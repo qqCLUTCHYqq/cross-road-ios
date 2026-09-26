@@ -7,3 +7,4 @@ CrossRoad/Assets.xcassets/AppIcon.appiconset/AppIcon.png
 CrossRoad/Assets.xcassets/AppIcon.appiconset/Contents.json
 CrossRoad/Content/*
 !CrossRoad/Content/.gitkeep
+CrossRoad/Web/ZIPFoundation-LICENSE.txt

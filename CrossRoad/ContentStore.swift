@@ -1,4 +1,5 @@
 import Foundation
+import ZIPFoundation
 
 struct GameAsset: Codable {
     let id: String
@@ -45,6 +46,37 @@ final class ContentStore {
         if let error = copyError { throw error }
         try index(destination)
         UserDefaults.standard.set(name, forKey: "contentFolder")
+        var excluded = destination
+        var values = URLResourceValues(); values.isExcludedFromBackup = true
+        try? excluded.setResourceValues(values)
+    }
+
+    func installArchive(_ source: URL, progress: Progress) throws {
+        try manager.createDirectory(at: support, withIntermediateDirectories: true)
+        let archive = try Archive(url: source, accessMode: .read)
+        var required: UInt64 = 268_435_456
+        for entry in archive {
+            guard entry.type != .symlink, !entry.path.hasPrefix("/"),
+                  !entry.path.split(separator: "/").contains("..") else {
+                throw NSError(domain: "Content", code: 3, userInfo: [NSLocalizedDescriptionKey: "Unsupported path in game archive."])
+            }
+            let (sum, overflow) = required.addingReportingOverflow(entry.uncompressedSize)
+            guard !overflow else { throw CocoaError(.fileReadCorruptFile) }
+            required = sum
+        }
+        let free = try support.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage
+        if let free, required > UInt64(max(0, free)) {
+            throw NSError(domain: "Content", code: 4, userInfo: [NSLocalizedDescriptionKey: "Not enough space to unpack the game. Free several GB and try again."])
+        }
+        let name = "Content-" + UUID().uuidString
+        let destination = support.appendingPathComponent(name, isDirectory: true)
+        try manager.createDirectory(at: destination, withIntermediateDirectories: true)
+        try manager.unzipItem(at: source, to: destination, skipCRC32: false, allowUncontainedSymlinks: false, progress: progress)
+        let nested = destination.appendingPathComponent("Content", isDirectory: true)
+        var directory: ObjCBool = false
+        let usesNested = manager.fileExists(atPath: nested.path, isDirectory: &directory) && directory.boolValue
+        try index(usesNested ? nested : destination)
+        UserDefaults.standard.set(usesNested ? name + "/Content" : name, forKey: "contentFolder")
         var excluded = destination
         var values = URLResourceValues(); values.isExcludedFromBackup = true
         try? excluded.setResourceValues(values)

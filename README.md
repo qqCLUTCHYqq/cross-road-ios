@@ -12,13 +12,13 @@ That is a real compiled iOS app package, **but it must be signed and installed t
 
 ## First launch
 
-1. Extract the compatible `Content.zip` into a folder accessible in the iPhone Files app.
-2. Launch Cross Road from its own Home Screen icon.
-3. Open Game options (•••), then **Import extracted Content folder**.
-4. Keep the app foregrounded during the copy. Enough free space for both the source and imported copy is needed.
-5. Later launches start directly into the game using the imported local files. No external server, PC, or active internet connection is needed for the intended local runtime path.
+1. Launch Cross Road from its own Home Screen icon.
+2. Open Game options (•••), then **Download game content (2.24 GB)**.
+3. Keep the app open on Wi-Fi while it downloads, verifies and unpacks the content. Allow several GB of free space. This first version restarts an interrupted download; it does not yet offer resume.
+4. Alternatively, extract a compatible `Content.zip` in Files and use **Import extracted Content folder**.
+5. Later launches start directly into the game using the local files. No external server, PC, or active internet connection is needed for the intended local runtime path.
 
-The uploaded archive contains the runtime, not Content. Content compatibility and full offline gameplay have not yet been tested. If content is bundled by a future build, the import can be skipped. To bundle it, put its extracted files in `CrossRoad/Content/` before building; those files are intentionally ignored by Git. Changing content retains old imported folders rather than deleting them silently.
+The uploaded archive contains the runtime, not Content. The setup downloader uses the original Archive.org preservation item, verifies its exact 2,244,643,150-byte size and published SHA-1, then extracts with CRC/path checks. The uploaded ZIP's MD5 matches that item's `v2/Cross Road.zip`. Content compatibility and full offline gameplay still need device testing. If content is bundled by a future build, setup can be skipped. To bundle it, put extracted files in `CrossRoad/Content/` before building; those files are intentionally ignored by Git. Changing content retains old imported folders rather than deleting them silently.
 
 ## Architecture
 
@@ -37,7 +37,7 @@ The uploaded archive contains the runtime, not Content. Content compatibility an
 bash scripts/build-ipa.sh
 ```
 
-Xcode with the iOS SDK, Node.js, and the selected command-line tools are required. No CocoaPods/SPM package installation is required. `scripts/generate-project.cjs` generates the checked-in Xcode project; `scripts/make-icon.swift` builds the icon asset.
+Xcode with the iOS SDK, Node.js, and the selected command-line tools are required. Xcode resolves ZIPFoundation 0.9.20 through Swift Package Manager for streaming archive extraction; no CocoaPods setup is needed. `scripts/generate-project.cjs` generates the checked-in Xcode project; `scripts/make-icon.swift` builds the icon asset. ZIPFoundation's MIT license is copied into the bundled Web resources during the build.
 
 The shell script archives for a physical iPhone (`iphoneos`), with signing disabled, and packages `Payload/CrossRoad.app` into the unsigned IPA. It never substitutes a simulator binary. To produce a device-provisioned signed IPA, configure your signing team/certificate/profile in Xcode and export a development or ad-hoc archive for the permitted devices. Do not put signing credentials in this repository.
 
