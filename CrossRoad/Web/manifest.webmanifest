@@ -1,0 +1,15 @@
+{
+  "name": "Project χ: Cross Road",
+  "short_name": "Cross Road",
+  "description": "Kingdom Hearts Union χ and Dark Road preservation runtime",
+  "start_url": "./game.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    { "src": "icons/crossroad-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/crossroad-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

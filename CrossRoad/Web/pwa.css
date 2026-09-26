@@ -1,0 +1,7 @@
+:root { color-scheme: dark; }
+html, body { min-height: 100%; background: #000; }
+body { padding-top: env(safe-area-inset-top); padding-right: env(safe-area-inset-right); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); }
+#pwa-status { max-width: 90vw; text-align: center; }
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  #pwa-status { bottom: calc(env(safe-area-inset-bottom) + 16px) !important; }
+}
