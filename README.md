@@ -1,4 +1,6 @@
-# Cross Road for iPhone — experimental
+# Cross Road preservation build
+
+The primary deliverable is now the Safari/PWA build in [PWA.md](PWA.md). It is designed for an HTTPS GitHub Pages URL, iPhone Safari, and Add to Home Screen installation. The native iOS project and unsigned IPA workflow remain as historical experiments.
 
 A native iOS application target for the uploaded KHUX/Dark Road Cross Road preservation runtime. It has a Home Screen icon and hosts the bundled runtime inside WKWebView. It does not open Safari or install a PWA. The game still renders through WebKit's WebGL implementation.
 
