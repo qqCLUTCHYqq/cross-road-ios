@@ -1,0 +1,9 @@
+build/
+dist/
+.DS_Store
+xcuserdata/
+*.xcuserstate
+CrossRoad/Assets.xcassets/AppIcon.appiconset/AppIcon.png
+CrossRoad/Assets.xcassets/AppIcon.appiconset/Contents.json
+CrossRoad/Content/*
+!CrossRoad/Content/.gitkeep

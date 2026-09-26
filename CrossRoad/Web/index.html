@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>KHUX Safari boot test</title>
+<style>body{font:17px system-ui,sans-serif;background:#101722;color:#e8edf5;max-width:850px;margin:32px auto;padding:0 20px;line-height:1.5}button,a{font:inherit;color:inherit}button{background:#304863;border:1px solid #87a4c5;border-radius:8px;padding:12px;margin:4px 8px 4px 0}a{color:#a9d5ff}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#1c293a;padding:16px;border-radius:8px;font-size:14px}canvas{max-width:100%;border:1px solid #61748b}small{color:#bbcadb}</style></head>
+<body><h1>KHUX Safari boot test</h1><p>This separate test uses a converted 32-bit-memory runtime. Start here before selecting any game content.</p>
+<button id="test">Run boot test</button><button id="stop" disabled>Stop test</button><button id="download">Save diagnostic log</button>
+<pre id="log" role="status">Ready. This test downloads approximately 28 MB of runtime files.</pre><div id="stage"></div>
+<p>A pass means the real runtime compiled, created worker WebGL, ran its native constructors, and completed JNI_OnLoad. It does not mean the game has rendered.</p>
+<p><a href="game.html?trace">Open game test</a> after the boot test passes. Extract Content.zip in Files first, then select the extracted folder. A folder named Content is not required by this loader; its actual contents matter.</p>
+<p><small>Game assets are kept in memory for this session by default. Saves use a separate browser database. Optional asset caching: <a href="game.html?trace&amp;cacheAssets">open with asset caching</a>. This package does not yet provide offline installation.</small></p>
+<script src="probe.js"></script></body></html>

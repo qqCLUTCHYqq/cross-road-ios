@@ -1,0 +1,22 @@
+name: Build iPhone IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build app and package IPA
+        run: bash scripts/build-ipa.sh
+      - name: Upload sideloading package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrossRoad-iPhone-unsigned
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30

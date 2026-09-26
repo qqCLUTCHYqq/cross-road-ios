@@ -1,0 +1,978 @@
+{
+  "format": 1,
+  "functions": [
+    {
+      "id": 1,
+      "name": "AAssetManager_fromJava",
+      "address": 20250624
+    },
+    {
+      "id": 2,
+      "name": "AAssetManager_open",
+      "address": 20250640
+    },
+    {
+      "id": 3,
+      "name": "AAsset_close",
+      "address": 20250656
+    },
+    {
+      "id": 4,
+      "name": "AAsset_getLength",
+      "address": 20250672
+    },
+    {
+      "id": 5,
+      "name": "AAsset_getLength64",
+      "address": 20250688
+    },
+    {
+      "id": 6,
+      "name": "AAsset_getRemainingLength64",
+      "address": 20250704
+    },
+    {
+      "id": 7,
+      "name": "AAsset_read",
+      "address": 20250720
+    },
+    {
+      "id": 8,
+      "name": "AAsset_seek",
+      "address": 20250736
+    },
+    {
+      "id": 9,
+      "name": "AAsset_seek64",
+      "address": 20250752
+    },
+    {
+      "id": 10,
+      "name": "__android_log_print",
+      "address": 20251552
+    },
+    {
+      "id": 11,
+      "name": "__android_log_write",
+      "address": 20251568
+    },
+    {
+      "id": 12,
+      "name": "access",
+      "address": 20251744
+    },
+    {
+      "id": 13,
+      "name": "clock_gettime",
+      "address": 20252016
+    },
+    {
+      "id": 14,
+      "name": "close",
+      "address": 20252032
+    },
+    {
+      "id": 15,
+      "name": "closedir",
+      "address": 20252048
+    },
+    {
+      "id": 16,
+      "name": "closelog",
+      "address": 20252064
+    },
+    {
+      "id": 17,
+      "name": "eglGetProcAddress",
+      "address": 20252224
+    },
+    {
+      "id": 18,
+      "name": "fclose",
+      "address": 20252320
+    },
+    {
+      "id": 19,
+      "name": "fdopen",
+      "address": 20252352
+    },
+    {
+      "id": 20,
+      "name": "feof",
+      "address": 20252368
+    },
+    {
+      "id": 21,
+      "name": "ferror",
+      "address": 20252384
+    },
+    {
+      "id": 22,
+      "name": "fflush",
+      "address": 20252400
+    },
+    {
+      "id": 23,
+      "name": "fgets",
+      "address": 20252416
+    },
+    {
+      "id": 24,
+      "name": "fileno",
+      "address": 20252432
+    },
+    {
+      "id": 25,
+      "name": "fopen",
+      "address": 20252480
+    },
+    {
+      "id": 26,
+      "name": "fprintf",
+      "address": 20252512
+    },
+    {
+      "id": 27,
+      "name": "fputc",
+      "address": 20252528
+    },
+    {
+      "id": 28,
+      "name": "fputs",
+      "address": 20252544
+    },
+    {
+      "id": 29,
+      "name": "fread",
+      "address": 20252560
+    },
+    {
+      "id": 30,
+      "name": "fseek",
+      "address": 20252640
+    },
+    {
+      "id": 31,
+      "name": "fseeko",
+      "address": 20252656
+    },
+    {
+      "id": 32,
+      "name": "fstat",
+      "address": 20252672
+    },
+    {
+      "id": 33,
+      "name": "ftell",
+      "address": 20252688
+    },
+    {
+      "id": 34,
+      "name": "ftello",
+      "address": 20252704
+    },
+    {
+      "id": 35,
+      "name": "fwrite",
+      "address": 20252720
+    },
+    {
+      "id": 36,
+      "name": "gettimeofday",
+      "address": 20252976
+    },
+    {
+      "id": 37,
+      "name": "glActiveTexture",
+      "address": 20253008
+    },
+    {
+      "id": 38,
+      "name": "glAttachShader",
+      "address": 20253024
+    },
+    {
+      "id": 39,
+      "name": "glBindAttribLocation",
+      "address": 20253040
+    },
+    {
+      "id": 40,
+      "name": "glBindBuffer",
+      "address": 20253056
+    },
+    {
+      "id": 41,
+      "name": "glBindFramebuffer",
+      "address": 20253072
+    },
+    {
+      "id": 42,
+      "name": "glBindRenderbuffer",
+      "address": 20253088
+    },
+    {
+      "id": 43,
+      "name": "glBindTexture",
+      "address": 20253104
+    },
+    {
+      "id": 44,
+      "name": "glBlendEquation",
+      "address": 20253120
+    },
+    {
+      "id": 45,
+      "name": "glBlendEquationSeparate",
+      "address": 20253136
+    },
+    {
+      "id": 46,
+      "name": "glBlendFunc",
+      "address": 20253152
+    },
+    {
+      "id": 47,
+      "name": "glBufferData",
+      "address": 20253168
+    },
+    {
+      "id": 48,
+      "name": "glBufferSubData",
+      "address": 20253184
+    },
+    {
+      "id": 49,
+      "name": "glCheckFramebufferStatus",
+      "address": 20253200
+    },
+    {
+      "id": 50,
+      "name": "glClear",
+      "address": 20253216
+    },
+    {
+      "id": 51,
+      "name": "glClearColor",
+      "address": 20253232
+    },
+    {
+      "id": 52,
+      "name": "glClearDepthf",
+      "address": 20253248
+    },
+    {
+      "id": 53,
+      "name": "glClearStencil",
+      "address": 20253264
+    },
+    {
+      "id": 54,
+      "name": "glCompileShader",
+      "address": 20253280
+    },
+    {
+      "id": 55,
+      "name": "glCompressedTexImage2D",
+      "address": 20253296
+    },
+    {
+      "id": 56,
+      "name": "glCreateProgram",
+      "address": 20253312
+    },
+    {
+      "id": 57,
+      "name": "glCreateShader",
+      "address": 20253328
+    },
+    {
+      "id": 58,
+      "name": "glCullFace",
+      "address": 20253344
+    },
+    {
+      "id": 59,
+      "name": "glDeleteBuffers",
+      "address": 20253360
+    },
+    {
+      "id": 60,
+      "name": "glDeleteFramebuffers",
+      "address": 20253376
+    },
+    {
+      "id": 61,
+      "name": "glDeleteProgram",
+      "address": 20253392
+    },
+    {
+      "id": 62,
+      "name": "glDeleteRenderbuffers",
+      "address": 20253408
+    },
+    {
+      "id": 63,
+      "name": "glDeleteShader",
+      "address": 20253424
+    },
+    {
+      "id": 64,
+      "name": "glDeleteTextures",
+      "address": 20253440
+    },
+    {
+      "id": 65,
+      "name": "glDepthFunc",
+      "address": 20253456
+    },
+    {
+      "id": 66,
+      "name": "glDepthMask",
+      "address": 20253472
+    },
+    {
+      "id": 67,
+      "name": "glDisable",
+      "address": 20253488
+    },
+    {
+      "id": 68,
+      "name": "glDisableVertexAttribArray",
+      "address": 20253504
+    },
+    {
+      "id": 69,
+      "name": "glDrawArrays",
+      "address": 20253520
+    },
+    {
+      "id": 70,
+      "name": "glDrawElements",
+      "address": 20253536
+    },
+    {
+      "id": 71,
+      "name": "glEnable",
+      "address": 20253552
+    },
+    {
+      "id": 72,
+      "name": "glEnableVertexAttribArray",
+      "address": 20253568
+    },
+    {
+      "id": 73,
+      "name": "glFramebufferRenderbuffer",
+      "address": 20253584
+    },
+    {
+      "id": 74,
+      "name": "glFramebufferTexture2D",
+      "address": 20253600
+    },
+    {
+      "id": 75,
+      "name": "glGenBuffers",
+      "address": 20253616
+    },
+    {
+      "id": 76,
+      "name": "glGenFramebuffers",
+      "address": 20253632
+    },
+    {
+      "id": 77,
+      "name": "glGenRenderbuffers",
+      "address": 20253648
+    },
+    {
+      "id": 78,
+      "name": "glGenTextures",
+      "address": 20253664
+    },
+    {
+      "id": 79,
+      "name": "glGenerateMipmap",
+      "address": 20253680
+    },
+    {
+      "id": 80,
+      "name": "glGetActiveAttrib",
+      "address": 20253696
+    },
+    {
+      "id": 81,
+      "name": "glGetActiveUniform",
+      "address": 20253712
+    },
+    {
+      "id": 82,
+      "name": "glGetAttribLocation",
+      "address": 20253728
+    },
+    {
+      "id": 83,
+      "name": "glGetBooleanv",
+      "address": 20253744
+    },
+    {
+      "id": 84,
+      "name": "glGetError",
+      "address": 20253760
+    },
+    {
+      "id": 85,
+      "name": "glGetFloatv",
+      "address": 20253776
+    },
+    {
+      "id": 86,
+      "name": "glGetIntegerv",
+      "address": 20253792
+    },
+    {
+      "id": 87,
+      "name": "glGetProgramInfoLog",
+      "address": 20253808
+    },
+    {
+      "id": 88,
+      "name": "glGetProgramiv",
+      "address": 20253824
+    },
+    {
+      "id": 89,
+      "name": "glGetShaderInfoLog",
+      "address": 20253840
+    },
+    {
+      "id": 90,
+      "name": "glGetShaderSource",
+      "address": 20253856
+    },
+    {
+      "id": 91,
+      "name": "glGetShaderiv",
+      "address": 20253872
+    },
+    {
+      "id": 92,
+      "name": "glGetString",
+      "address": 20253888
+    },
+    {
+      "id": 93,
+      "name": "glGetUniformLocation",
+      "address": 20253904
+    },
+    {
+      "id": 94,
+      "name": "glIsBuffer",
+      "address": 20253920
+    },
+    {
+      "id": 95,
+      "name": "glIsEnabled",
+      "address": 20253936
+    },
+    {
+      "id": 96,
+      "name": "glLinkProgram",
+      "address": 20253952
+    },
+    {
+      "id": 97,
+      "name": "glMapBufferOES",
+      "address": 20253968
+    },
+    {
+      "id": 98,
+      "name": "glPixelStorei",
+      "address": 20253984
+    },
+    {
+      "id": 99,
+      "name": "glPolygonOffset",
+      "address": 20254000
+    },
+    {
+      "id": 100,
+      "name": "glReadPixels",
+      "address": 20254016
+    },
+    {
+      "id": 101,
+      "name": "glRenderbufferStorage",
+      "address": 20254032
+    },
+    {
+      "id": 102,
+      "name": "glScissor",
+      "address": 20254048
+    },
+    {
+      "id": 103,
+      "name": "glShaderSource",
+      "address": 20254064
+    },
+    {
+      "id": 104,
+      "name": "glStencilFunc",
+      "address": 20254080
+    },
+    {
+      "id": 105,
+      "name": "glStencilMask",
+      "address": 20254096
+    },
+    {
+      "id": 106,
+      "name": "glStencilOp",
+      "address": 20254112
+    },
+    {
+      "id": 107,
+      "name": "glTexImage2D",
+      "address": 20254128
+    },
+    {
+      "id": 108,
+      "name": "glTexParameteri",
+      "address": 20254144
+    },
+    {
+      "id": 109,
+      "name": "glTexSubImage2D",
+      "address": 20254160
+    },
+    {
+      "id": 110,
+      "name": "glUniform1f",
+      "address": 20254176
+    },
+    {
+      "id": 111,
+      "name": "glUniform1i",
+      "address": 20254192
+    },
+    {
+      "id": 112,
+      "name": "glUniform2f",
+      "address": 20254208
+    },
+    {
+      "id": 113,
+      "name": "glUniform2fv",
+      "address": 20254224
+    },
+    {
+      "id": 114,
+      "name": "glUniform2i",
+      "address": 20254240
+    },
+    {
+      "id": 115,
+      "name": "glUniform2iv",
+      "address": 20254256
+    },
+    {
+      "id": 116,
+      "name": "glUniform3f",
+      "address": 20254272
+    },
+    {
+      "id": 117,
+      "name": "glUniform3fv",
+      "address": 20254288
+    },
+    {
+      "id": 118,
+      "name": "glUniform3i",
+      "address": 20254304
+    },
+    {
+      "id": 119,
+      "name": "glUniform3iv",
+      "address": 20254320
+    },
+    {
+      "id": 120,
+      "name": "glUniform4f",
+      "address": 20254336
+    },
+    {
+      "id": 121,
+      "name": "glUniform4fv",
+      "address": 20254352
+    },
+    {
+      "id": 122,
+      "name": "glUniform4i",
+      "address": 20254368
+    },
+    {
+      "id": 123,
+      "name": "glUniform4iv",
+      "address": 20254384
+    },
+    {
+      "id": 124,
+      "name": "glUniformMatrix2fv",
+      "address": 20254400
+    },
+    {
+      "id": 125,
+      "name": "glUniformMatrix3fv",
+      "address": 20254416
+    },
+    {
+      "id": 126,
+      "name": "glUniformMatrix4fv",
+      "address": 20254432
+    },
+    {
+      "id": 127,
+      "name": "glUnmapBufferOES",
+      "address": 20254448
+    },
+    {
+      "id": 128,
+      "name": "glUseProgram",
+      "address": 20254464
+    },
+    {
+      "id": 129,
+      "name": "glVertexAttribPointer",
+      "address": 20254480
+    },
+    {
+      "id": 130,
+      "name": "glViewport",
+      "address": 20254496
+    },
+    {
+      "id": 131,
+      "name": "lseek",
+      "address": 20255136
+    },
+    {
+      "id": 132,
+      "name": "mkdir",
+      "address": 20255360
+    },
+    {
+      "id": 133,
+      "name": "mmap",
+      "address": 20255392
+    },
+    {
+      "id": 134,
+      "name": "mprotect",
+      "address": 20255440
+    },
+    {
+      "id": 135,
+      "name": "munmap",
+      "address": 20255456
+    },
+    {
+      "id": 136,
+      "name": "open",
+      "address": 20255504
+    },
+    {
+      "id": 137,
+      "name": "opendir",
+      "address": 20255520
+    },
+    {
+      "id": 138,
+      "name": "openlog",
+      "address": 20255536
+    },
+    {
+      "id": 139,
+      "name": "perror",
+      "address": 20255552
+    },
+    {
+      "id": 140,
+      "name": "printf",
+      "address": 20255616
+    },
+    {
+      "id": 141,
+      "name": "putchar",
+      "address": 20256128
+    },
+    {
+      "id": 142,
+      "name": "read",
+      "address": 20256192
+    },
+    {
+      "id": 143,
+      "name": "readdir",
+      "address": 20256208
+    },
+    {
+      "id": 144,
+      "name": "realpath",
+      "address": 20256240
+    },
+    {
+      "id": 145,
+      "name": "remove",
+      "address": 20256288
+    },
+    {
+      "id": 146,
+      "name": "rename",
+      "address": 20256304
+    },
+    {
+      "id": 147,
+      "name": "setbuf",
+      "address": 20256384
+    },
+    {
+      "id": 148,
+      "name": "slCreateEngine",
+      "address": 20256608
+    },
+    {
+      "id": 149,
+      "name": "stat",
+      "address": 20256752
+    },
+    {
+      "id": 150,
+      "name": "syslog",
+      "address": 20257344
+    },
+    {
+      "id": 151,
+      "name": "time",
+      "address": 20257408
+    },
+    {
+      "id": 152,
+      "name": "truncate",
+      "address": 20257536
+    },
+    {
+      "id": 153,
+      "name": "vfprintf",
+      "address": 20257600
+    },
+    {
+      "id": 154,
+      "name": "vprintf",
+      "address": 20257616
+    },
+    {
+      "id": 155,
+      "name": "write",
+      "address": 20257968
+    }
+  ],
+  "data": [
+    {
+      "name": "SL_IID_3DCOMMIT",
+      "address": 20250768
+    },
+    {
+      "name": "SL_IID_3DDOPPLER",
+      "address": 20250784
+    },
+    {
+      "name": "SL_IID_3DGROUPING",
+      "address": 20250800
+    },
+    {
+      "name": "SL_IID_3DLOCATION",
+      "address": 20250816
+    },
+    {
+      "name": "SL_IID_3DMACROSCOPIC",
+      "address": 20250832
+    },
+    {
+      "name": "SL_IID_3DSOURCE",
+      "address": 20250848
+    },
+    {
+      "name": "SL_IID_ANDROIDCONFIGURATION",
+      "address": 20250864
+    },
+    {
+      "name": "SL_IID_ANDROIDEFFECT",
+      "address": 20250880
+    },
+    {
+      "name": "SL_IID_ANDROIDEFFECTCAPABILITIES",
+      "address": 20250896
+    },
+    {
+      "name": "SL_IID_ANDROIDEFFECTSEND",
+      "address": 20250912
+    },
+    {
+      "name": "SL_IID_ANDROIDSIMPLEBUFFERQUEUE",
+      "address": 20250928
+    },
+    {
+      "name": "SL_IID_AUDIODECODERCAPABILITIES",
+      "address": 20250944
+    },
+    {
+      "name": "SL_IID_AUDIOENCODER",
+      "address": 20250960
+    },
+    {
+      "name": "SL_IID_AUDIOENCODERCAPABILITIES",
+      "address": 20250976
+    },
+    {
+      "name": "SL_IID_AUDIOIODEVICECAPABILITIES",
+      "address": 20250992
+    },
+    {
+      "name": "SL_IID_BASSBOOST",
+      "address": 20251008
+    },
+    {
+      "name": "SL_IID_BUFFERQUEUE",
+      "address": 20251024
+    },
+    {
+      "name": "SL_IID_DEVICEVOLUME",
+      "address": 20251040
+    },
+    {
+      "name": "SL_IID_DYNAMICINTERFACEMANAGEMENT",
+      "address": 20251056
+    },
+    {
+      "name": "SL_IID_DYNAMICSOURCE",
+      "address": 20251072
+    },
+    {
+      "name": "SL_IID_EFFECTSEND",
+      "address": 20251088
+    },
+    {
+      "name": "SL_IID_ENGINE",
+      "address": 20251104
+    },
+    {
+      "name": "SL_IID_ENGINECAPABILITIES",
+      "address": 20251120
+    },
+    {
+      "name": "SL_IID_ENVIRONMENTALREVERB",
+      "address": 20251136
+    },
+    {
+      "name": "SL_IID_EQUALIZER",
+      "address": 20251152
+    },
+    {
+      "name": "SL_IID_LED",
+      "address": 20251168
+    },
+    {
+      "name": "SL_IID_METADATAEXTRACTION",
+      "address": 20251184
+    },
+    {
+      "name": "SL_IID_METADATATRAVERSAL",
+      "address": 20251200
+    },
+    {
+      "name": "SL_IID_MIDIMESSAGE",
+      "address": 20251216
+    },
+    {
+      "name": "SL_IID_MIDIMUTESOLO",
+      "address": 20251232
+    },
+    {
+      "name": "SL_IID_MIDITEMPO",
+      "address": 20251248
+    },
+    {
+      "name": "SL_IID_MIDITIME",
+      "address": 20251264
+    },
+    {
+      "name": "SL_IID_MUTESOLO",
+      "address": 20251280
+    },
+    {
+      "name": "SL_IID_NULL",
+      "address": 20251296
+    },
+    {
+      "name": "SL_IID_OBJECT",
+      "address": 20251312
+    },
+    {
+      "name": "SL_IID_OUTPUTMIX",
+      "address": 20251328
+    },
+    {
+      "name": "SL_IID_PITCH",
+      "address": 20251344
+    },
+    {
+      "name": "SL_IID_PLAY",
+      "address": 20251360
+    },
+    {
+      "name": "SL_IID_PLAYBACKRATE",
+      "address": 20251376
+    },
+    {
+      "name": "SL_IID_PREFETCHSTATUS",
+      "address": 20251392
+    },
+    {
+      "name": "SL_IID_PRESETREVERB",
+      "address": 20251408
+    },
+    {
+      "name": "SL_IID_RATEPITCH",
+      "address": 20251424
+    },
+    {
+      "name": "SL_IID_RECORD",
+      "address": 20251440
+    },
+    {
+      "name": "SL_IID_SEEK",
+      "address": 20251456
+    },
+    {
+      "name": "SL_IID_THREADSYNC",
+      "address": 20251472
+    },
+    {
+      "name": "SL_IID_VIBRA",
+      "address": 20251488
+    },
+    {
+      "name": "SL_IID_VIRTUALIZER",
+      "address": 20251504
+    },
+    {
+      "name": "SL_IID_VISUALIZATION",
+      "address": 20251520
+    },
+    {
+      "name": "SL_IID_VOLUME",
+      "address": 20251536
+    }
+  ]
+}

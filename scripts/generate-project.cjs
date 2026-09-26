@@ -1,0 +1,29 @@
+const fs=require('fs'),path=require('path');
+const root=path.resolve(__dirname,'..');
+let serial=1;const id=()=>String(serial++).padStart(24,'0');const objects=[];
+function obj(body){const key=id();objects.push(`${key} = { ${body} };`);return key}
+const sourceFiles=['AppDelegate.swift','ContentStore.swift','LocalServer.swift','GameViewController.swift'];
+const sourceRefs=sourceFiles.map(name=>obj(`isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ${name}; sourceTree = "<group>";`));
+const sourceBuilds=sourceRefs.map(fileRef=>obj(`isa = PBXBuildFile; fileRef = ${fileRef};`));
+const web=obj('isa = PBXFileReference; lastKnownFileType = folder; path = Web; sourceTree = "<group>";');
+const content=obj('isa = PBXFileReference; lastKnownFileType = folder; path = Content; sourceTree = "<group>";');
+const assets=obj('isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>";');
+const resources=[web,content,assets].map(fileRef=>obj(`isa = PBXBuildFile; fileRef = ${fileRef};`));
+const plist=obj('isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>";');
+const product=obj('isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrossRoad.app; sourceTree = BUILT_PRODUCTS_DIR;');
+const appGroup=obj(`isa = PBXGroup; children = (${[...sourceRefs,web,content,assets,plist].join(',')}); path = CrossRoad; sourceTree = "<group>";`);
+const products=obj(`isa = PBXGroup; children = (${product}); name = Products; sourceTree = "<group>";`);
+const main=obj(`isa = PBXGroup; children = (${appGroup},${products}); sourceTree = "<group>";`);
+const sources=obj(`isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (${sourceBuilds.join(',')}); runOnlyForDeploymentPostprocessing = 0;`);
+const resourcePhase=obj(`isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (${resources.join(',')}); runOnlyForDeploymentPostprocessing = 0;`);
+const frameworks=obj('isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;');
+const projectSettings='CLANG_ENABLE_MODULES = YES; SDKROOT = iphoneos; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SWIFT_VERSION = 5.0;';
+const appSettings='PRODUCT_NAME = "$(TARGET_NAME)"; PRODUCT_BUNDLE_IDENTIFIER = io.github.qqclutchyqq.crossroad; INFOPLIST_FILE = CrossRoad/Info.plist; GENERATE_INFOPLIST_FILE = NO; ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; TARGETED_DEVICE_FAMILY = "1,2"; CODE_SIGN_STYLE = Automatic; SWIFT_VERSION = 5.0; IPHONEOS_DEPLOYMENT_TARGET = 17.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";';
+function configs(settings){const debug=obj(`isa = XCBuildConfiguration; name = Debug; buildSettings = { ${settings} SWIFT_OPTIMIZATION_LEVEL = "-Onone"; };`);const release=obj(`isa = XCBuildConfiguration; name = Release; buildSettings = { ${settings} SWIFT_OPTIMIZATION_LEVEL = "-O"; };`);return obj(`isa = XCConfigurationList; buildConfigurations = (${debug},${release}); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;`)}
+const pc=configs(projectSettings),ac=configs(appSettings);
+const target=obj(`isa = PBXNativeTarget; buildConfigurationList = ${ac}; buildPhases = (${sources},${frameworks},${resourcePhase}); buildRules = (); dependencies = (); name = CrossRoad; productName = CrossRoad; productReference = ${product}; productType = "com.apple.product-type.application";`);
+const project=obj(`isa = PBXProject; attributes = { LastUpgradeCheck = 1600; }; buildConfigurationList = ${pc}; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en,Base); mainGroup = ${main}; productRefGroup = ${products}; projectDirPath = ""; projectRoot = ""; targets = (${target});`);
+const directory=path.join(root,'CrossRoad.xcodeproj');fs.mkdirSync(directory,{recursive:true});fs.writeFileSync(path.join(directory,'project.pbxproj'),`// !$*UTF8*$!\n{ archiveVersion = 1; classes = {}; objectVersion = 56; objects = {\n${objects.join('\n')}\n}; rootObject = ${project}; }\n`);
+const scheme=`<?xml version="1.0" encoding="UTF-8"?><Scheme LastUpgradeVersion="1600" version="1.3"><BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES"><BuildActionEntries><BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="YES" buildForArchiving="YES" buildForAnalyzing="YES"><BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="${target}" BuildableName="CrossRoad.app" BlueprintName="CrossRoad" ReferencedContainer="container:CrossRoad.xcodeproj"/></BuildActionEntry></BuildActionEntries></BuildAction><LaunchAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.IDEFoundation.Launcher.LLDB" launchStyle="0" useCustomWorkingDirectory="NO" ignoresPersistentStateOnLaunch="NO" debugDocumentVersioning="YES" debugServiceExtension="internal" allowLocationSimulation="YES"><BuildableProductRunnable runnableDebuggingMode="0"><BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="${target}" BuildableName="CrossRoad.app" BlueprintName="CrossRoad" ReferencedContainer="container:CrossRoad.xcodeproj"/></BuildableProductRunnable></LaunchAction><ArchiveAction buildConfiguration="Release" revealArchiveInOrganizer="YES"/></Scheme>`;
+fs.mkdirSync(path.join(directory,'xcshareddata/xcschemes'),{recursive:true});fs.writeFileSync(path.join(directory,'xcshareddata/xcschemes/CrossRoad.xcscheme'),scheme);
+fs.mkdirSync(path.join(root,'CrossRoad/Content'),{recursive:true});fs.writeFileSync(path.join(root,'CrossRoad/Content/.gitkeep'),'');
