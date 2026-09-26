@@ -18,6 +18,19 @@ status.textContent = 'Cross Road is starting…';
 status.style.cssText = 'position:fixed;z-index:9999;left:env(safe-area-inset-left,12px);right:env(safe-area-inset-right,12px);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);padding:10px 14px;border-radius:12px;background:#142238e8;color:#eef6ff;font:14px system-ui;pointer-events:none;opacity:.9';
 document.addEventListener('DOMContentLoaded', () => document.body.append(status), { once: true });
 globalThis.safariLog = line => { console.log('[Cross Road]', line); status.textContent = String(line); };
+// app.js expects this bridge before its module initializes.
+globalThis.__createStandaloneWorker = () => {
+  const worker = new Worker(new URL('runtime-worker.js', document.baseURI));
+  worker.addEventListener('message', ({ data }) => {
+    if (data.type === 'error') safariLog('Runtime error: ' + data.error);
+    else if (data.type === 'log') safariLog(data.line);
+    else if (data.type === 'ready') safariLog('Runtime ready.');
+  });
+  worker.addEventListener('error', event => safariLog('Worker error: ' + event.message));
+  return worker;
+};
+addEventListener('error', event => safariLog('Page error: ' + event.message));
+addEventListener('unhandledrejection', event => safariLog('Startup error: ' + (event.reason?.message || event.reason)));
 globalThis.__pwaContent = { ready: false, count: 0 };
 
 function pathOf(file) { return file.webkitRelativePath || file.relativePath || file.name; }
