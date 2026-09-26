@@ -7,7 +7,8 @@ DEVICE=$(node -e 'const d=require("./build/smoke/devices.json");for(const [runti
 xcrun simctl boot "$DEVICE" || true
 xcrun simctl bootstatus "$DEVICE" -b
 xcodebuild -project CrossRoad.xcodeproj -scheme CrossRoad -configuration Debug \
-  -sdk iphonesimulator -destination "id=$DEVICE" -derivedDataPath "$PWD/build/simulator" \
+  -sdk iphonesimulator -destination "id=$DEVICE,arch=arm64" -derivedDataPath "$PWD/build/simulator" \
+  ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \
   CODE_SIGNING_ALLOWED=NO build > build/smoke/simulator-build.txt 2>&1
 xcrun simctl install "$DEVICE" build/simulator/Build/Products/Debug-iphonesimulator/CrossRoad.app
 xcrun simctl launch "$DEVICE" io.github.qqclutchyqq.crossroad --boot-diagnostic
