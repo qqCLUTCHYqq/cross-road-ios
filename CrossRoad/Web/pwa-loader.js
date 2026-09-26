@@ -57,7 +57,7 @@ async function saveFiles(files) {
 async function restoreFiles(input) {
   try {
     const entries = await transaction('readonly');
-    if (!entries.length) return false;
+    if (!entries.length) { safariLog('Choose your extracted Content folder to begin.'); return false; }
     const transfer = new DataTransfer();
     for (const entry of entries) transfer.items.add(withPath(new File([entry.blob], entry.path.split('/').pop(), { type: entry.type, lastModified: entry.lastModified }), entry.path));
     input.files = transfer.files;
