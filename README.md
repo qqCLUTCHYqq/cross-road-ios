@@ -1,3 +1,22 @@
+# [▶ PLAY / OPEN CROSS ROAD](https://qqclutchyqq.github.io/cross-road-ios/)
+
+Play Kingdom Hearts Union χ and Dark Road on your iPhone. Tap the big Play link above, then **Launch game**.
+
+## Add Cross Road to your iPhone Home Screen
+
+1. Open the **Play** link above in **Safari**.
+2. Tap **Share**.
+3. Tap **Add to Home Screen**.
+4. Launch **Cross Road** from the new Home Screen icon.
+
+**Game Content loads automatically.** KHUX/Dark Road Content comes from the configured remote Content hosting. You do not need to manually download, extract, or select a Content folder. Keep an internet connection available while playing; game data is downloaded as needed and cached on your device.
+
+---
+
+## Technical and preservation documentation
+
+The documentation below preserves the project’s technical history, including the earlier native iPhone app experiment. Its IPA installation and manual Content instructions are for that older experiment; use the Play link above for the current iPhone experience.
+
 # Cross Road preservation build
 
 The primary deliverable is now the Safari/PWA build in [PWA.md](PWA.md). It is designed for an HTTPS GitHub Pages URL, iPhone Safari, and Add to Home Screen installation. The native iOS project and unsigned IPA workflow remain as historical experiments.
