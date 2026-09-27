@@ -1,3 +1,5 @@
+import { installGameMenu } from './mobile-menu.js';
+
 // The worker expects normalized coordinates and kinds 1/2/3/4 (begin/move/end/cancel).
 export function gamePoint(canvas, event) {
   const rect = canvas.getBoundingClientRect();
@@ -86,38 +88,29 @@ export class MobilePointer {
 }
 
 export function installMobileInterface(audio) {
-  const style = document.createElement('style');
-  style.textContent = `
-    html,html body { overflow:auto!important; height:auto!important; min-height:100dvh; }
-    html body #app { overflow:visible!important; height:auto!important; min-height:100dvh; }
-    html body #play-area,html body #play-area>.container { height:auto!important; }
-    html body #stage { box-sizing:border-box; position:relative; width:100%!important; height:var(--game-height,100dvh)!important; display:flex!important; align-items:center!important; justify-content:center!important; background:#000!important; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)!important; }
-    html body #stage canvas#game { flex:none; width:var(--game-width)!important; height:var(--canvas-height)!important; max-width:none!important; max-height:none!important; object-fit:contain; touch-action:none; -webkit-user-select:none; user-select:none; }
-    body.game-focused #play-area>.container>.actions,body.game-focused #panel,body.game-focused #app>.panel,body.game-focused #pwa-status,body.game-focused #fullscreen-exit { display:none!important; }
-    #mobile-controls { position:fixed; z-index:10001; top:calc(env(safe-area-inset-top,0px) + 8px); right:calc(env(safe-area-inset-right,0px) + 8px); width:auto; padding:8px 12px; font:14px system-ui; opacity:.75!important; }
-    #stage .aot-video-overlay { position:absolute; width:var(--game-width); height:var(--canvas-height); }
-  `;
+  const style = document.createElement('link');
+  style.rel = 'stylesheet'; style.href = new URL('./mobile-ui.css',import.meta.url).href;
   document.head.append(style);
   let unlocked = false;
-  const button = document.createElement('button');
-  button.id = 'mobile-controls'; button.textContent = 'Controls'; button.hidden = true;
-  button.setAttribute('aria-expanded', 'false'); document.body.append(button);
+  const menu = installGameMenu({afterRestart:()=>{if(unlocked)unlock();}});
+  const button = menu.button;
   function layout() {
     const canvas = document.querySelector('#game'); if (!canvas) return;
     const viewport = window.visualViewport;
-    const width = Math.min(document.documentElement.clientWidth, viewport?.width || innerWidth);
+    const width = viewport?.width || document.documentElement.clientWidth || innerWidth;
     const height = viewport?.height || innerHeight;
-    const insets = getComputedStyle(canvas.parentElement);
-    const insetX = (parseFloat(insets.paddingLeft)||0) + (parseFloat(insets.paddingRight)||0);
-    const insetY = (parseFloat(insets.paddingTop)||0) + (parseFloat(insets.paddingBottom)||0);
-    const availableHeight = Math.max(1, height - insetY);
-    const ratio = canvas.width / canvas.height;
-    const gameWidth = Math.min(Math.max(1, width - insetX), availableHeight * ratio);
+    const stage = canvas.parentElement;
+    const insets = getComputedStyle(stage);
+    const left = parseFloat(insets.paddingLeft)||0, right = parseFloat(insets.paddingRight)||0;
+    const top = parseFloat(insets.paddingTop)||0, bottom = parseFloat(insets.paddingBottom)||0;
+    const box = fitGameViewport(width,height,canvas.width,canvas.height,{left,right,top,bottom});
     const root = document.documentElement.style;
-    root.setProperty('--game-width', gameWidth + 'px');
-    root.setProperty('--canvas-height', gameWidth / ratio + 'px');
-    root.setProperty('--game-height', height + 'px');
+    root.setProperty('--view-width',width+'px'); root.setProperty('--view-height',height+'px');
+    root.setProperty('--view-left',(viewport?.offsetLeft||0)+'px'); root.setProperty('--view-top',(viewport?.offsetTop||0)+'px');
+    root.setProperty('--game-width',box.width+'px'); root.setProperty('--canvas-height',box.height+'px');
+    root.setProperty('--canvas-left',box.left+'px'); root.setProperty('--canvas-top',box.top+'px');
   }
+  style.addEventListener('load',layout);
   function unlock() {
     unlocked = true;
     try {
@@ -134,20 +127,27 @@ export function installMobileInterface(audio) {
   };
   document.addEventListener('pointerdown', gesture, { capture:true, passive:true });
   document.addEventListener('touchend', gesture, { capture:true, passive:true });
-  button.onclick = () => {
-    const collapsed = document.body.classList.toggle('game-focused');
-    button.textContent = collapsed ? 'Controls' : 'Hide controls';
-    button.setAttribute('aria-expanded', String(!collapsed)); layout();
-  };
-  const ready = () => { document.body.classList.add('game-focused'); button.hidden = false; layout(); };
+  const ready = () => { document.body.classList.add('game-focused'); layout(); };
   document.addEventListener('crossroad-ready', ready);
-  document.addEventListener('crossroad-stop', () => { document.body.classList.remove('game-focused'); button.hidden = true; });
+  document.addEventListener('crossroad-stop', () => { document.body.classList.remove('game-focused'); layout(); });
   document.addEventListener('visibilitychange', () => {
     audio.resetTiming();
     if (!document.hidden && unlocked) { try { const ctx = audio.open(); Promise.resolve(ctx.resume()).catch(() => {}); } catch {} }
   });
   window.addEventListener('pageshow', () => { layout(); if (unlocked && !document.hidden) { try { Promise.resolve(audio.open().resume()).catch(() => {}); } catch {} } });
   window.addEventListener('resize', layout); window.visualViewport?.addEventListener('resize', layout);
+  window.visualViewport?.addEventListener('scroll', layout);
+  window.addEventListener('orientationchange',()=>requestAnimationFrame(layout));
+  document.addEventListener('fullscreenchange',layout);
   new MutationObserver(layout).observe(document.querySelector('#app'), { childList:true, subtree:true });
   layout();
+}
+
+// CSS sizing only. Never write the emulated canvas width/height.
+export function fitGameViewport(width,height,nativeWidth,nativeHeight,insets={}) {
+  const {left=0,right=0,top=0,bottom=0}=insets;
+  const usableWidth=Math.max(1,width-left-right),usableHeight=Math.max(1,height-top-bottom);
+  const scale=Math.min(usableWidth/nativeWidth,usableHeight/nativeHeight);
+  const gameWidth=nativeWidth*scale,gameHeight=nativeHeight*scale;
+  return {width:gameWidth,height:gameHeight,left:left+(usableWidth-gameWidth)/2,top:top+(usableHeight-gameHeight)/2};
 }
