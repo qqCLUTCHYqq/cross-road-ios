@@ -76,7 +76,37 @@ function watchRuntimeInput() {
   restoreFiles(input);
   return true;
 }
-const observer = new MutationObserver(watchRuntimeInput);
-observer.observe(document.documentElement, { childList: true, subtree: true });
-const timer = setInterval(() => { if (watchRuntimeInput()) clearInterval(timer); }, 250);
-if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./service-worker.js').catch(error => safariLog(`Offline cache unavailable: ${error.message}`));
+
+// Local-folder mode remains available for diagnostics; normal launches use R2.
+if (new URLSearchParams(location.search).has('localContent')) {
+  const observer = new MutationObserver(watchRuntimeInput);
+  observer.observe(document.documentElement, {childList:true,subtree:true});
+  const timer = setInterval(() => { if(watchRuntimeInput()) clearInterval(timer); },250);
+} else {
+  globalThis.__remoteContentReady = (async () => {
+    safariLog('Connecting to game Content…');
+    if (!('serviceWorker' in navigator)) throw Error('A secure Safari connection is required.');
+    await navigator.serviceWorker.register('./service-worker.js');
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) await new Promise((resolve,reject) => {
+      const timeout=setTimeout(()=>reject(Error('Content cache did not activate. Reload this page.')),30000);
+      navigator.serviceWorker.addEventListener('controllerchange',()=>{clearTimeout(timeout);resolve();},{once:true});
+    });
+    let response;
+    const deadline=Date.now()+90000;
+    do {
+      response=await fetch('./__content-manifest',{cache:'no-store'});
+      if(response.status!==404) break;
+      if(Date.now()>deadline) throw Error('Content update did not activate. Close and reopen this page.');
+      await new Promise(resolve=>setTimeout(resolve,1000));
+    } while(true);
+    if(!response.ok) throw Error(await response.text());
+    const manifest=await response.json();
+    globalThis.__pwaContent={ready:true,count:manifest.files.length,source:'r2',version:manifest.version};
+    safariLog('R2 Content verified. Starting KHUX…');
+    return manifest.files.map(file=>({remoteAsset:true,name:file.path.split('/').pop(),webkitRelativePath:file.path,size:file.size,version:manifest.version,blockSize:manifest.blockSize}));
+  })();
+  // Attach immediately, before the application module has finished loading.
+  globalThis.__remoteContentReady.catch(error=>safariLog('Content unavailable: '+error.message));
+}
+if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./service-worker.js').catch(error => safariLog('Offline cache unavailable: '+error.message));

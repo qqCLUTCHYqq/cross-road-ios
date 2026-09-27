@@ -39,3 +39,6 @@ globalThis.__nativeFlush=()=>X.postMessage({type:'nativeFlush'});
 if (!globalThis.__pwaContent) (async()=>{try{const response=await fetch('native/manifest');if(!response.ok)throw Error('Content manifest HTTP '+response.status);const files=await response.json();if(!files.length)throw Error('No imported game content');await tr();await xa.start(files,false);}catch(e){globalThis.safariLog('FAIL: '+(e.stack||e))}})();
 
 installMobileInterface({open:()=>Vi.open(),resetTiming:()=>{Vi.graph.nextAt=0;Vi.graph.pending=null;}});
+
+// Automatic remote Content startup uses the existing runtime start interface.
+if (globalThis.__remoteContentReady) globalThis.__remoteContentReady.then(async files => { await tr(); await xa.start(files,false); }).catch(error => globalThis.safariLog("Content startup failed: " + error.message));
