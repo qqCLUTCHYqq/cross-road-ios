@@ -1,0 +1,51 @@
+{
+  "version": "khux-5.0.1-ww-20260926",
+  "baseURL": "https://pub-61baea6dd5ab4809a305cf4645aeaaf7.r2.dev/",
+  "blockSize": 1048576,
+  "files": [
+    {
+      "path": "Content/aliud.png",
+      "size": 28873543
+    },
+    {
+      "path": "Content/dark_op_movie.mp4",
+      "size": 15909791
+    },
+    {
+      "path": "Content/extra.mp4",
+      "size": 216964
+    },
+    {
+      "path": "Content/extra.png",
+      "size": 1543
+    },
+    {
+      "path": "Content/extra_mp4/darkBook",
+      "size": 29962
+    },
+    {
+      "path": "Content/extra_mp4/darkPlayer",
+      "size": 19709
+    },
+    {
+      "path": "Content/main.76.com.square_enix.android_googleplay.khuxww.obb",
+      "size": 1652397828
+    },
+    {
+      "path": "Content/misc.mp4",
+      "size": 21087007
+    },
+    {
+      "path": "Content/misc.png",
+      "size": 115291
+    },
+    {
+      "path": "Content/misc_mp4/info/version",
+      "size": 9
+    },
+    {
+      "path": "Content/patch.87.com.square_enix.android_googleplay.khuxww.obb",
+      "size": 533504978
+    }
+  ]
+}
