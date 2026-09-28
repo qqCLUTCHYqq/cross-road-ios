@@ -1,6 +1,6 @@
 importScripts('./content-verify.js');
-const CACHE = 'cross-road-pwa-native-touch-v12';
-const SHELL = ['./', './index.html', './game.html', './manifest.webmanifest', './pwa.css', './pwa-loader.js', './app.js', './mobile-runtime.js', './mobile-menu.js', './mobile-ui.css', './remote-files.js', './content-manifest.json', './content-verify.js', './runtime-worker.js', './aot-browser.json', './aot-runtime.json', './libcocos2dcpp-aot.wasm.gz', './libcocos2dcpp-image.bin.gz', './icons/crossroad-192.png', './icons/crossroad-512.png'];
+const CACHE = 'cross-road-pwa-lifecycle-diagnostics-v13';
+const SHELL = ['./', './index.html', './game.html', './manifest.webmanifest', './pwa.css', './pwa-loader.js', './app.js', './mobile-runtime.js', './mobile-menu.js', './diagnostics.js', './mobile-ui.css', './remote-files.js', './content-manifest.json', './content-verify.js', './runtime-worker.js', './aot-browser.json', './aot-runtime.json', './libcocos2dcpp-aot.wasm.gz', './libcocos2dcpp-image.bin.gz', './icons/crossroad-192.png', './icons/crossroad-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL.map(url => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });

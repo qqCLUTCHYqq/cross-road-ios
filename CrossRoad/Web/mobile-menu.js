@@ -1,3 +1,4 @@
+import { installDiagnosticExport } from './diagnostics.js';
 // Presentation only: reuse the existing controls, save fields and their handlers.
 export function installGameMenu({ afterRestart = () => {} } = {}) {
   const app = document.querySelector('#app');
@@ -53,6 +54,7 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
     else { messages.push(text);if(messages.length>300)messages.shift(); }
   };
   const logView=sheet.querySelector('#mobile-diagnostics');
+  installDiagnosticExport(logView.parentElement,()=>logView.textContent);
   function updateLog(){if(sheet.open && view==='diagnostics')setText(logView,messages.join('\n') || document.querySelector('#pwa-status')?.textContent || 'Waiting for runtime messages…');}
   setInterval(updateLog,1000);
   function setText(node,text){if(node.textContent!==text)node.textContent=text;}

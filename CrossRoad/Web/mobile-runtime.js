@@ -133,6 +133,7 @@ export function installMobileInterface(audio) {
   style.rel = 'stylesheet'; style.href = new URL('./mobile-ui.css',import.meta.url).href;
   document.head.append(style);
   let unlocked = false;
+  let pageAway = false;
   const menu = installGameMenu({afterRestart:()=>{if(unlocked)unlock();}});
   const button = menu.button;
   function layout() {
@@ -153,6 +154,7 @@ export function installMobileInterface(audio) {
   }
   style.addEventListener('load',layout);
   function unlock() {
+    if (pageAway || document.hidden) return;
     unlocked = true;
     try {
       if (navigator.audioSession) navigator.audioSession.type = 'playback';
@@ -172,10 +174,13 @@ export function installMobileInterface(audio) {
   document.addEventListener('crossroad-ready', ready);
   document.addEventListener('crossroad-stop', () => { document.body.classList.remove('game-focused'); layout(); });
   document.addEventListener('visibilitychange', () => {
-    audio.resetTiming();
-    if (!document.hidden && unlocked) { try { const ctx = audio.open(); Promise.resolve(ctx.resume()).catch(() => {}); } catch {} }
+    audio.setBackground(pageAway || document.hidden);
   });
-  window.addEventListener('pageshow', () => { layout(); if (unlocked && !document.hidden) { try { Promise.resolve(audio.open().resume()).catch(() => {}); } catch {} } });
+  window.addEventListener('pagehide', () => { pageAway = true; audio.setBackground(true); });
+  window.addEventListener('pageshow', () => { pageAway = false; layout(); audio.setBackground(document.hidden); });
+  document.addEventListener('freeze', () => audio.setBackground(true));
+  document.addEventListener('resume', () => audio.setBackground(pageAway || document.hidden));
+  audio.setBackground(document.hidden);
   window.addEventListener('resize', layout); window.visualViewport?.addEventListener('resize', layout);
   window.visualViewport?.addEventListener('scroll', layout);
   window.addEventListener('orientationchange',()=>requestAnimationFrame(layout));
