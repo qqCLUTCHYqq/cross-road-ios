@@ -17,6 +17,14 @@ export class MobilePointer {
   constructor(canvas, send, unlock) {
     this.canvas = canvas; this.post = send; this.unlock = unlock;
     this.active = null; this.last = null; this.handlers = [];
+    this.sequence = 0; this.contact = null; this.traceMoves = 0;
+  }
+  trace(label, event) {
+    const rect = this.canvas.getBoundingClientRect();
+    const target = event?.target;
+    const hit = event && Number.isFinite(event.clientX) ? document.elementFromPoint?.(event.clientX, event.clientY) : null;
+    const name = node => node ? `${node.tagName || '?'}#${node.id || ''}` : '-';
+    globalThis.safariLog?.(`[touch v12 #${this.sequence}] ${label} pointer=${event?.pointerId ?? '-'} active=${this.active ?? '-'} target=${name(target)} hit=${name(hit)} capture=${this.active !== null && !!this.canvas.hasPointerCapture?.(this.active)} rect=${[rect.left,rect.top,rect.width,rect.height].map(n=>Math.round(n)).join(',')}`);
   }
   listen(target, name, handler, options = { passive: false }) {
     target.addEventListener(name, handler, options);
@@ -26,13 +34,16 @@ export class MobilePointer {
     const point = event ? gamePoint(this.canvas, event) : this.last;
     if (!point) return;
     this.last = point;
-    this.post({ type: 'input', kind, x: point.x, y: point.y });
+    this.post({ type: 'input', kind, x: point.x, y: point.y, inputSequence: this.sequence,
+      inputTrace: kind !== 2 || this.traceMoves++ === 0 });
   }
   begin(id, event) {
     if (this.blocked || document.querySelector('#mobile-menu[open]') || !gamePoint(this.canvas, event)?.inside) return;
     // A fresh primary down is also recovery from a missed release/interruption.
     if (this.active !== null) this.finish(this.active, null, 4);
     this.active = id;
+    this.sequence++; this.traceMoves = 0;
+    this.trace('BEGIN sent', event);
     // Audio must never prevent delivery of game input.
     try { this.unlock(); } catch (error) { console.warn('Audio unlock:', error); }
     this.emit(1, event);
@@ -42,6 +53,8 @@ export class MobilePointer {
     // Clear first: releasePointerCapture may synchronously report capture loss.
     this.active = null;
     this.emit(kind, event);
+    this.contact = null;
+    this.trace(kind === 3 ? 'END sent' : 'CANCEL sent', event);
     try { if (this.canvas.hasPointerCapture?.(id)) this.canvas.releasePointerCapture(id); } catch {}
   }
   attach() {
@@ -62,6 +75,21 @@ export class MobilePointer {
       this.listen(window, 'pointerup', event => this.finish(event.pointerId, event), {capture:true,passive:true});
       this.listen(window, 'pointercancel', event => this.finish(event.pointerId, null, 4), {capture:true,passive:true});
       this.listen(this.canvas, 'lostpointercapture', event => this.finish(event.pointerId, null, 4));
+      // Safari also reports the physical contact through Touch Events. Use only
+      // its terminal event if Pointer Events failed to finish that same contact.
+      // Never synthesize a second Begin or a second terminal event.
+      this.listen(this.canvas, 'touchstart', event => {
+        if (this.active !== null && event.touches.length === 1) this.contact = event.changedTouches[0]?.identifier ?? null;
+      }, {capture:true,passive:true});
+      for (const name of ['touchend','touchcancel']) this.listen(window, name, event => {
+        const touch = Array.from(event.changedTouches).find(t => t.identifier === this.contact);
+        if (this.active === null || !touch) return;
+        this.trace(`${name} terminal fallback`, touch);
+        this.finish(this.active, touch, name === 'touchend' ? 3 : 4);
+      }, {capture:true,passive:true});
+      for (const name of ['pointerdown','pointerup','pointercancel','lostpointercapture']) this.listen(window, name, event => {
+        if (!document.querySelector('#mobile-menu[open]')) this.trace(`DOM ${name} primary=${event.isPrimary}`, event);
+      }, {capture:true,passive:true});
     } else {
       this.listen(this.canvas, 'touchstart', event => {
         if (this.active !== null && event.touches?.length > 1) return;
