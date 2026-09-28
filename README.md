@@ -1,3 +1,5 @@
+![Cross Road — KINGDOM HEARTS Union χ + Dark Road preservation project](docs/assets/cross-road-banner.png)
+
 # CROSS ROAD
 
 **KINGDOM HEARTS Union χ + Dark Road — iPhone/Web Preservation Build**
@@ -99,3 +101,4 @@ The original archive remains untouched. No new license is applied to third-party
 - [v1.0.0-beta release notes and runtime baseline](docs/releases/v1.0.0-beta.md)
 
 Players can simply use **[▶ PLAY NOW](https://qqclutchyqq.github.io/cross-road-ios/)**. The native IPA experiment is historical and is not part of the normal installation.
+
