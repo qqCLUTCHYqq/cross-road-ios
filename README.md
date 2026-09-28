@@ -93,6 +93,10 @@ Original `Cross Road.zip` SHA-256:
 
 The original archive remains untouched. No new license is applied to third-party Cross Road, game, or runtime material. Existing third-party notices and the historical ZIPFoundation acknowledgement are preserved.
 
+## Legal / Disclaimer
+
+**Unofficial fan preservation project.** Not affiliated with or endorsed by Square Enix or Disney. KINGDOM HEARTS and related intellectual property belong to their respective rights holders. This repository includes or interfaces with third-party preservation/runtime material for which this project does not claim ownership. See [LEGAL.md](LEGAL.md) for details.
+
 ## Technical / Preservation Documentation
 
 - [PWA hosting, Content and storage notes](PWA.md)
@@ -101,4 +105,5 @@ The original archive remains untouched. No new license is applied to third-party
 - [v1.0.0-beta release notes and runtime baseline](docs/releases/v1.0.0-beta.md)
 
 Players can simply use **[▶ PLAY NOW](https://qqclutchyqq.github.io/cross-road-ios/)**. The native IPA experiment is historical and is not part of the normal installation.
+
 
