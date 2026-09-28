@@ -1,6 +1,6 @@
 importScripts('./content-verify.js');
-const CACHE = 'cross-road-pwa-lifecycle-diagnostics-v13';
-const SHELL = ['./', './index.html', './game.html', './manifest.webmanifest', './pwa.css', './pwa-loader.js', './app.js', './mobile-runtime.js', './mobile-menu.js', './diagnostics.js', './mobile-ui.css', './remote-files.js', './content-manifest.json', './content-verify.js', './runtime-worker.js', './aot-browser.json', './aot-runtime.json', './libcocos2dcpp-aot.wasm.gz', './libcocos2dcpp-image.bin.gz', './icons/crossroad-192.png', './icons/crossroad-512.png'];
+const CACHE = 'cross-road-pwa-audio-recovery-v14';
+const SHELL = ['./', './index.html', './game.html', './manifest.webmanifest', './pwa.css', './pwa-loader.js', './app.js', './mobile-runtime.js', './mobile-menu.js', './diagnostics.js','./audio-lifecycle.js', './mobile-ui.css', './remote-files.js', './content-manifest.json', './content-verify.js', './runtime-worker.js', './aot-browser.json', './aot-runtime.json', './libcocos2dcpp-aot.wasm.gz', './libcocos2dcpp-image.bin.gz', './icons/crossroad-192.png', './icons/crossroad-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL.map(url => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
@@ -76,3 +76,4 @@ async function contentBlockResponse(url) {
     return result;
   } catch(error) { console.error('Remote Content:',error.message);return new Response(error.message,{status:502}); }
 }
+// v14 release: first return tap renews the browser audio route.
