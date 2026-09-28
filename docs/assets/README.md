@@ -1,6 +1,7 @@
 # Project artwork
 
-Reserved for maintainer-supplied, approved Cross Road banner artwork. No banner was generated or downloaded during the beta presentation pass.
+`cross-road-banner.png` is the banner supplied by the project maintainer for the public repository presentation. It is displayed at the top of the root README.
 
-After the artwork is supplied, add it here and reference it from the root README. Preserve creator credit and any usage requirements supplied with it.
+The banner is promotional artwork, not a gameplay screenshot. Its pictured navigation and buttons are part of the image; use the live Play link in the root README to launch the game.
 
+The supplied image is preserved without modification. No new license is applied to the artwork or third-party material.
