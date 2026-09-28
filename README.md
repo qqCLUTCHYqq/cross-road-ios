@@ -23,7 +23,25 @@ Your KHUX/Dark Road progress is saved **locally on the device/browser you play o
 - **Updates:** Normal updates to the PWA are intended to preserve existing local saves.
 
 For the safest experience, export a backup before removing/reinstalling the PWA or making major changes.
+---
+## 🌙 Need Help? Join Traverse Town
 
+Need help getting Cross Road running on iPhone or iPad? Found a bug, have an idea, or want to follow development?
+
+**[Join the Traverse Town Discord](https://discord.gg/jHWEkRdjJb)**
+
+Traverse Town is the official community home for Cross Road.
+
+Come by for:
+
+- 🛠️ iPhone/iPad setup help
+- 💾 Save and backup help
+- 🐛 Bug reports and troubleshooting
+- 💡 Suggestions and feature ideas
+- 📢 Cross Road development updates
+- 🗝️ KINGDOM HEARTS discussion
+
+---
 ---
 ## Technical and preservation documentation
 
