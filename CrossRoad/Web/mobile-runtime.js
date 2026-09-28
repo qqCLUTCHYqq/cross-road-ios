@@ -29,7 +29,9 @@ export class MobilePointer {
     this.post({ type: 'input', kind, x: point.x, y: point.y });
   }
   begin(id, event) {
-    if (this.active !== null || !gamePoint(this.canvas, event)?.inside) return;
+    if (this.blocked || document.querySelector('#mobile-menu[open]') || !gamePoint(this.canvas, event)?.inside) return;
+    // A fresh primary down is also recovery from a missed release/interruption.
+    if (this.active !== null) this.finish(this.active, null, 4);
     this.active = id;
     // Audio must never prevent delivery of game input.
     try { this.unlock(); } catch (error) { console.warn('Audio unlock:', error); }
@@ -37,7 +39,10 @@ export class MobilePointer {
   }
   finish(id, event, kind = 3) {
     if (this.active === null || this.active !== id) return;
-    this.emit(kind, event); this.active = null;
+    // Clear first: releasePointerCapture may synchronously report capture loss.
+    this.active = null;
+    this.emit(kind, event);
+    try { if (this.canvas.hasPointerCapture?.(id)) this.canvas.releasePointerCapture(id); } catch {}
   }
   attach() {
     this.canvas.style.touchAction = 'none';
@@ -46,19 +51,20 @@ export class MobilePointer {
         if (event.isPrimary === false || (event.pointerType === 'mouse' && event.button !== 0)) return;
         if (!gamePoint(this.canvas, event)?.inside) return;
         event.preventDefault(); this.begin(event.pointerId, event);
-        try { this.canvas.setPointerCapture(event.pointerId); } catch {}
+        try { if (this.active === event.pointerId) this.canvas.setPointerCapture(event.pointerId); } catch {}
       });
       this.listen(this.canvas, 'pointermove', event => {
         if (this.active !== event.pointerId) return;
         event.preventDefault(); this.emit(2, event);
       });
-      this.listen(window, 'pointerup', event => {
-        if (this.active === event.pointerId) { event.preventDefault(); this.finish(event.pointerId, event); }
-      });
-      this.listen(window, 'pointercancel', event => this.finish(event.pointerId, null, 4));
+      // Capture-phase cleanup cannot be swallowed by a control/overlay handler.
+      // Global cleanup must not cancel the default behavior of DOM controls.
+      this.listen(window, 'pointerup', event => this.finish(event.pointerId, event), {capture:true,passive:true});
+      this.listen(window, 'pointercancel', event => this.finish(event.pointerId, null, 4), {capture:true,passive:true});
       this.listen(this.canvas, 'lostpointercapture', event => this.finish(event.pointerId, null, 4));
     } else {
       this.listen(this.canvas, 'touchstart', event => {
+        if (this.active !== null && event.touches?.length > 1) return;
         const touch = event.changedTouches[0];
         if (!touch || !gamePoint(this.canvas, touch)?.inside) return;
         event.preventDefault(); this.begin(touch.identifier, touch);
@@ -69,9 +75,16 @@ export class MobilePointer {
       });
       for (const name of ['touchend', 'touchcancel']) this.listen(window, name, event => {
         const touch = Array.from(event.changedTouches).find(t => t.identifier === this.active);
-        if (touch) { event.preventDefault(); this.finish(touch.identifier, touch, name === 'touchcancel' ? 4 : 3); }
-      });
+        if (touch) this.finish(touch.identifier, touch, name === 'touchcancel' ? 4 : 3);
+      }, {capture:true,passive:true});
     }
+    this.listen(document, 'crossroad-menu-state', event => {
+      this.finish(this.active, null, 4); this.blocked = !!event.detail?.open;
+    });
+    this.listen(document, 'pointerdown', event => {
+      if (event.target !== this.canvas) this.finish(this.active, null, 4);
+    }, {capture:true,passive:true});
+    this.listen(window, 'orientationchange', () => this.finish(this.active, null, 4));
     this.listen(window, 'blur', () => this.finish(this.active, null, 4));
     this.listen(document, 'visibilitychange', () => { if (document.hidden) this.finish(this.active, null, 4); });
     this.listen(this.canvas, 'contextmenu', event => event.preventDefault());

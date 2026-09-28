@@ -46,3 +46,21 @@ html body #mobile-menu pre { box-sizing:border-box;max-width:100%;white-space:pr
 html body #mobile-menu .cache-manager ul { max-height:none; }
 html body #editbox { box-sizing:border-box;left:var(--view-left,0px);bottom:auto;top:calc(var(--view-top,0px) + var(--view-height,100dvh));transform:translateY(-100%);width:var(--view-width,100vw);padding:12px max(12px,var(--mobile-safe-right)) max(12px,var(--mobile-safe-bottom)) max(12px,var(--mobile-safe-left)); }
 html body #edit { box-sizing:border-box;max-width:100%;font-size:16px; }
+
+/* Keep navigation reachable even with a narrow viewport or an open keyboard. */
+html body #mobile-menu .mobile-menu-header { display:grid;grid-template-columns:auto minmax(0,1fr) auto;position:relative;z-index:2; }
+html body #mobile-menu .mobile-menu-header h2 { min-width:0;overflow-wrap:anywhere;font-size:18px; }
+html body #mobile-menu .mobile-menu-header button { flex-shrink:0;min-width:64px; }
+html body #mobile-menu .mobile-menu-scroll { width:100%;max-width:100%;overflow-x:hidden;touch-action:pan-y; }
+html body #mobile-menu .mobile-menu-scroll > * { min-width:0;max-width:100%; }
+html body #mobile-menu input { touch-action:manipulation;pointer-events:auto; }
+html body #mobile-menu input[type=number] { -webkit-user-select:text;user-select:text; }
+html body #mobile-menu .savefield label { padding:4px;min-width:64px; }
+html body #mobile-menu #panel > p:has(#saverefresh) { position:static; }
+html body #mobile-menu .savefield { grid-template-columns:minmax(0,1fr) auto; }
+html body #mobile-menu .savefield label { grid-column:1; }
+html body #mobile-menu .savefield > button { min-width:64px; }
+@media (max-height:450px) {
+  html body #mobile-menu .mobile-menu-header { padding:4px 8px; }
+  html body #mobile-menu .mobile-menu-scroll { padding:0 12px 12px; }
+}

@@ -11,9 +11,10 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
   sheet.innerHTML = `<header class="mobile-menu-header"><button type="button" id="mobile-menu-back">‹ Menu</button><h2 id="mobile-menu-title">Cross Road</h2><button type="button" id="mobile-menu-close">Close</button></header>
   <div class="mobile-menu-scroll">
     <section data-view="home"><h3>Game</h3><div class="mobile-menu-grid" id="mobile-game-actions"></div>
-      <h3>Save Data</h3><div class="mobile-menu-grid"><button type="button" data-open="editor">Save Game Editor</button><button type="button" data-open="backup">Save backup / restore</button></div>
+      <h3>Save Data</h3><p class="mobile-hint">Game progress is stored locally by the game. Exporting a backup is optional and is not the normal save step.</p><div class="mobile-menu-grid"><button type="button" data-open="editor">Save Game Editor</button><button type="button" data-open="backup">Back Up / Restore Save</button></div>
       <h3>Settings / Advanced</h3><div class="mobile-menu-grid"><button type="button" data-open="advanced">Settings &amp; Content</button><button type="button" data-open="diagnostics">Diagnostics</button></div></section>
-    <section data-view="editor"><p class="mobile-hint">These are the original live save controls. Use <b>Write save file</b> to persist editor changes. The game continues running behind this sheet.</p><div id="mobile-editor-slot"></div></section>
+    <section data-view="editor"><p class="mobile-hint">This editor supports <b>Dark Road</b>. Load Dark Road first to enable its fields. Use <b>Write save file</b> after editing values; this is separate from normal game saving. The game continues running behind this sheet.</p><div id="mobile-editor-slot"></div></section>
+    <section data-view="backup"><p class="mobile-hint">Your normal progress stays in this browser or Home Screen app. <b>Back Up / Export Save</b> downloads a separate backup. <b>Restore / Import Save</b> replaces local progress with a backup. Stop the game before using these controls.</p></section>
     <section data-view="advanced"><div id="mobile-speed-slot"></div><h3>Game Content</h3><div id="mobile-content-actions" class="mobile-menu-grid"></div><p class="mobile-hint">Normal launches load Content automatically. Local file controls are optional.</p></section>
     <div id="mobile-details-slot"></div>
     <section data-view="diagnostics"><p class="mobile-hint">Recent runtime messages. Opening this view does not restart the game.</p><pre id="mobile-diagnostics" tabindex="0" aria-label="Runtime diagnostics"></pre></section>
@@ -23,7 +24,7 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
   const back = sheet.querySelector('#mobile-menu-back');
   const close = sheet.querySelector('#mobile-menu-close');
   const scroll = sheet.querySelector('.mobile-menu-scroll');
-  const titles = {home:'Cross Road',editor:'Save Game Editor',backup:'Save backup / restore',advanced:'Settings / Advanced',diagnostics:'Diagnostics'};
+  const titles = {home:'Cross Road',editor:'Save Game Editor',backup:'Back Up / Restore Save',advanced:'Settings / Advanced',diagnostics:'Diagnostics'};
   let view = 'home', restartRequested = false;
   const actions = [];
   const addAction = (host, label, find, dismiss = false) => {
@@ -77,6 +78,10 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
       detail.hidden = view==='backup' ? !isBackup : isBackup;
       if(isBackup && view==='backup')detail.open=true;
     }
+    if(extras)for(const control of extras.querySelectorAll('button')) {
+      if(control.textContent.trim()==='Export save')setText(control,'Back Up / Export Save');
+      if(control.textContent.trim()==='Import save')setText(control,'Restore / Import Save');
+    }
     for(const {proxy,find,label} of actions) {
       const original=find();proxy.hidden=!original;proxy.disabled=!!original?.disabled;
       const text=original?.id==='start'?original.textContent.trim():original?.id==='clear'?original.textContent.trim():label;
@@ -91,9 +96,10 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
     }
   }
   function show(next='home') {
+    document.dispatchEvent(new CustomEvent('crossroad-menu-state',{detail:{open:true}}));
     view=next;sheet.dataset.view=view;
     for(const section of sheet.querySelectorAll('[data-view]'))section.hidden=section.dataset.view!==view;
-    setText(title,titles[view]);back.hidden=view==='home';
+    setText(title,titles[view]);back.hidden=false;setText(back,view==='home'?'‹ Game':'‹ Back');
     sync();updateLog();
     if(!sheet.open)sheet.showModal();
     document.body.classList.add('mobile-menu-open');button.setAttribute('aria-expanded','true');
@@ -101,9 +107,25 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
     if(view==='editor') { const refresh=document.querySelector('#saverefresh');if(refresh&&!refresh.disabled)refresh.click(); }
   }
   function hide(){sheet.close();}
-  button.onclick=()=>show();back.onclick=()=>show();close.onclick=hide;
+  button.onclick=()=>show();back.onclick=()=>view==='home'?hide():show();close.onclick=hide;
   for(const item of sheet.querySelectorAll('[data-open]'))item.onclick=()=>show(item.dataset.open);
-  sheet.addEventListener('close',()=>{document.body.classList.remove('mobile-menu-open');button.setAttribute('aria-expanded','false');button.focus({preventScroll:true});});
+  sheet.addEventListener('close',()=>{document.body.classList.remove('mobile-menu-open');button.setAttribute('aria-expanded','false');document.dispatchEvent(new CustomEvent('crossroad-menu-state',{detail:{open:false}}));button.focus({preventScroll:true});});
+  // Activate touch buttons on release, without relying on Safari's synthesized
+  // mouse click after hover/layout changes. Leave inputs and scrolling native.
+  let touchPress=null, lastActivation=null;
+  sheet.addEventListener('pointerdown',event=>{
+    const target=event.target.closest('button');
+    touchPress=event.pointerType==='touch'&&target&&!target.disabled?{id:event.pointerId,target,x:event.clientX,y:event.clientY,scroll:scroll.scrollTop}:null;
+  },{capture:true,passive:true});
+  sheet.addEventListener('pointercancel',()=>{touchPress=null;},{capture:true,passive:true});
+  sheet.addEventListener('pointerup',event=>{
+    const press=touchPress;touchPress=null;
+    if(!press||press.id!==event.pointerId||event.target.closest('button')!==press.target||Math.hypot(event.clientX-press.x,event.clientY-press.y)>10||Math.abs(scroll.scrollTop-press.scroll)>2)return;
+    event.preventDefault();lastActivation={target:press.target,until:performance.now()+700};press.target.click();
+  },{capture:true,passive:false});
+  sheet.addEventListener('click',event=>{
+    if(event.isTrusted&&lastActivation?.target===event.target.closest('button')&&performance.now()<lastActivation.until){event.preventDefault();event.stopImmediatePropagation();}
+  },true);
   sheet.addEventListener('click',event=>{if(event.target===sheet){const r=sheet.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)hide();}});
   document.addEventListener('fullscreenchange',sync);
   new MutationObserver(sync).observe(app,{childList:true,subtree:true});
