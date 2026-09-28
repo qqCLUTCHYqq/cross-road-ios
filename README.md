@@ -12,7 +12,19 @@ Play Kingdom Hearts Union χ and Dark Road on your iPhone. Tap the big Play link
 **Game Content loads automatically.** KHUX/Dark Road Content comes from the configured remote Content hosting. You do not need to manually download, extract, or select a Content folder. Keep an internet connection available while playing; game data is downloaded as needed and cached on your device.
 
 ---
+## 💾 Save Data and Backups
 
+Your KHUX/Dark Road progress is saved **locally on the device/browser you play on**. Your save is not stored in GitHub or Cloudflare.
+
+- **Normal saving:** Save and play normally. Your progress should still be there when you close and reopen Cross Road on the same device/browser.
+- **Back up your save:** Open **••• → Save Data** and use the existing export/backup option. On iPhone, save the exported file to **Files → On My iPhone** or **iCloud Drive**.
+- **Restore a save:** Open **••• → Save Data** and use the existing import/restore option to select your backup.
+- **Important:** Clearing Safari website data can remove locally stored save data. Keep an exported backup if your progress matters.
+- **Updates:** Normal updates to the PWA are intended to preserve existing local saves.
+
+For the safest experience, export a backup before removing/reinstalling the PWA or making major changes.
+
+---
 ## Technical and preservation documentation
 
 The documentation below preserves the project’s technical history, including the earlier native iPhone app experiment. Its IPA installation and manual Content instructions are for that older experiment; use the Play link above for the current iPhone experience.
