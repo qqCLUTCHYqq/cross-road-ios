@@ -1,15 +1,35 @@
 # Cross Road PWA
 
-The Safari build is in `CrossRoad/Web`. It includes the converted wasm32 runtime, an install manifest, service-worker caching, iPhone safe-area metadata, and an IndexedDB bridge. The first time a user chooses the extracted `Content` folder, the bridge stores the selected files on that device and restores them automatically on later launches.
+Player installation and backups: [README](README.md).
+
+## Current public build
+
+[Open Cross Road](https://qqclutchyqq.github.io/cross-road-ios/) in Safari and add it to the Home Screen. The deployed files are in `CrossRoad/Web`.
+
+Normal launches automatically retrieve the configured Content manifest and stream verified file ranges from Cloudflare R2. Users do not need to download, extract, or choose a Content folder. The existing service worker caches the runtime shell and fetched Content blocks. Internet access remains necessary for uncached game data; this is not a promise that the complete Content library is available offline.
+
+Game saves are local browser data in IndexedDB. Content hosting is a read path, not a save-upload service. Browser storage may be removed, so use the existing backup/export controls described in the README.
 
 ## Deploy with GitHub Pages
 
-1. In the repository, open **Settings → Pages** and choose **GitHub Actions** as the source.
-2. Push to `main`, or run **Deploy Cross Road PWA** from the Actions tab.
-3. Open `https://qqclutchyqq.github.io/cross-road-ios/` in Safari on iPhone.
-4. Tap **Share → Add to Home Screen**, then launch **Cross Road** from the new icon.
-5. The first launch needs an extracted compatible `Content` folder. After the initial selection, the PWA saves the files in IndexedDB and restores them without another folder selection.
+1. In **Settings → Pages**, choose **GitHub Actions** as the source.
+2. Push the intended build to `main`, or run **Deploy Cross Road PWA**.
+3. Confirm the deployment succeeds and open the public Play link.
+4. Test Safari and the Home Screen app, including saved progress and diagnostics.
 
-GitHub Pages supplies HTTPS, which is required for service workers and installability. The site shell can run offline after its first visit; game content is kept in browser storage and is not committed to GitHub or bundled into the site. iOS storage quotas vary, so importing a 2.24 GB folder may require a device with sufficient free space.
+GitHub Pages provides HTTPS for workers and Home Screen installation. R2 public-read/CORS/cache configuration and client Content descriptors are already configured. Never place R2 credentials or API tokens in client files, commits, diagnostic reports, or the public site.
 
-For a quick local test, serve `CrossRoad/Web` from an HTTPS or localhost server and open `index.html`. Opening the files directly from the Files app will not work because service workers and WebAssembly workers need a secure origin.
+This documentation-only beta presentation release keeps the exact v14 runtime and cache version. A GitHub release tag snapshots the repository; the Play URL continues to serve the build deployed from `main`.
+
+## Diagnostics and compatibility
+
+Use **••• → Diagnostics** for the build/cache version, runtime log and audio lifecycle state. **Copy Diagnostics** and **Export Diagnostics** produce a diagnostic text report; they are distinct from save backups. Review any report before posting to [Discord](https://discord.gg/jHWEkRdjJb).
+
+Physical-iPhone testing is the target. Device/OS compatibility reports are welcome; a desktop or simulator pass is not proof for every iPhone.
+
+## Local testing and historical paths
+
+Serve `CrossRoad/Web` from HTTPS or localhost. Opening HTML directly from Files does not provide the required secure worker origin. A different development origin may need its own Content-hosting CORS configuration; do not change production hosting just to follow these notes.
+
+The existing `?localContent` path is available for manual-folder diagnostics; it is not normal installation. The original folder-import documentation, native server architecture, WASM conversion, constructors/JNI checks, build scripts and IPA experiment are preserved in [TECHNICAL.md](TECHNICAL.md).
+
