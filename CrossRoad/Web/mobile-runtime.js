@@ -24,7 +24,7 @@ export class MobilePointer {
     const target = event?.target;
     const hit = event && Number.isFinite(event.clientX) ? document.elementFromPoint?.(event.clientX, event.clientY) : null;
     const name = node => node ? `${node.tagName || '?'}#${node.id || ''}` : '-';
-    globalThis.safariLog?.(`[touch v12 #${this.sequence}] ${label} pointer=${event?.pointerId ?? '-'} active=${this.active ?? '-'} target=${name(target)} hit=${name(hit)} capture=${this.active !== null && !!this.canvas.hasPointerCapture?.(this.active)} rect=${[rect.left,rect.top,rect.width,rect.height].map(n=>Math.round(n)).join(',')}`);
+    globalThis.safariLog?.(`[touch #${this.sequence}] ${label} pointer=${event?.pointerId ?? '-'} active=${this.active ?? '-'} target=${name(target)} hit=${name(hit)} capture=${this.active !== null && !!this.canvas.hasPointerCapture?.(this.active)} rect=${[rect.left,rect.top,rect.width,rect.height].map(n=>Math.round(n)).join(',')}`);
   }
   listen(target, name, handler, options = { passive: false }) {
     target.addEventListener(name, handler, options);
@@ -128,10 +128,16 @@ export class MobilePointer {
   destroy() { this.finish(this.active, null, 4); this.handlers.splice(0).forEach(remove => remove()); }
 }
 
+// Document-lifetime owner: first installation owns the audio adapter/listeners.
+// Keep it across Stop/Restart and BFCache; no gameplay teardown is introduced.
+const mobileInterfaceKey = Symbol.for('crossroad.mobile-interface');
 export function installMobileInterface(audio) {
+  if (document[mobileInterfaceKey]) return;
+  const installation = document[mobileInterfaceKey] = {};
   const style = document.createElement('link');
   style.rel = 'stylesheet'; style.href = new URL('./mobile-ui.css',import.meta.url).href;
   document.head.append(style);
+  installation.style = style;
   let unlocked = false;
   let pageAway = false;
   const menu = installGameMenu({afterRestart:()=>{if(unlocked)unlock();}});
@@ -188,7 +194,8 @@ export function installMobileInterface(audio) {
   window.visualViewport?.addEventListener('scroll', layout);
   window.addEventListener('orientationchange',()=>requestAnimationFrame(layout));
   document.addEventListener('fullscreenchange',layout);
-  new MutationObserver(layout).observe(document.querySelector('#app'), { childList:true, subtree:true });
+  installation.observer = new MutationObserver(layout);
+  installation.observer.observe(document.querySelector('#app'), { childList:true, subtree:true });
   layout();
 }
 

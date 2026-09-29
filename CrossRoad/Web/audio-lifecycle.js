@@ -6,7 +6,7 @@ export class AudioLifecycle {
     this.lastSuspend='none'; this.lastResume='none'; this.result='not started';
     this.replacements=0; this.gestureRefresh=false;
   }
-  log(message) { globalThis.safariLog?.('[audio lifecycle v14] '+message); }
+  log(message) { globalThis.safariLog?.('[audio lifecycle] '+message); }
   invalidate() {
     this.serial++; clearTimeout(this.timer); this.timer=null; this.active=false;
     this.owner.queueReporter.stop(); this.owner.queueReporter.epoch=++this.epoch;

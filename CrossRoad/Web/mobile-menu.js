@@ -1,6 +1,11 @@
 import { installDiagnosticExport } from './diagnostics.js';
 // Presentation only: reuse the existing controls, save fields and their handlers.
+// Owns the dialog/proxies, safariLog wrapper, log polling and panel observer for
+// this document. Stop/Restart must retain these; see TECHNICAL.md for boundaries.
+const gameMenuKey = Symbol.for('crossroad.game-menu');
 export function installGameMenu({ afterRestart = () => {} } = {}) {
+  if (document[gameMenuKey]) return document[gameMenuKey].api;
+  const installation = document[gameMenuKey] = {};
   const app = document.querySelector('#app');
   const playArea = document.querySelector('#play-area');
   const button = document.createElement('button');
@@ -56,7 +61,7 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
   const logView=sheet.querySelector('#mobile-diagnostics');
   installDiagnosticExport(logView.parentElement,()=>logView.textContent);
   function updateLog(){if(sheet.open && view==='diagnostics')setText(logView,messages.join('\n') || document.querySelector('#pwa-status')?.textContent || 'Waiting for runtime messages…');}
-  setInterval(updateLog,1000);
+  installation.logInterval = setInterval(updateLog,1000);
   function setText(node,text){if(node.textContent!==text)node.textContent=text;}
   function sync() {
     // Moving whole stable panels inside the same Svelte root preserves all handlers
@@ -130,11 +135,12 @@ export function installGameMenu({ afterRestart = () => {} } = {}) {
   },true);
   sheet.addEventListener('click',event=>{if(event.target===sheet){const r=sheet.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)hide();}});
   document.addEventListener('fullscreenchange',sync);
-  new MutationObserver(sync).observe(app,{childList:true,subtree:true});
+  installation.observer = new MutationObserver(sync);
+  installation.observer.observe(app,{childList:true,subtree:true});
   // Stop retains access to backup/import. No save operation is added to this UI.
   document.addEventListener('crossroad-stop',()=>{
     const restarting=restartRequested;restartRequested=false;
     queueMicrotask(()=>{sync();if(restarting)afterRestart();});
   });
-  sync();return {button,show,hide};
+  sync();return installation.api = {button,show,hide};
 }
