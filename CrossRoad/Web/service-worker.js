@@ -1,5 +1,5 @@
 importScripts('./content-verify.js');
-const CACHE = 'cross-road-pwa-close-probe-v15';
+const CACHE = 'cross-road-pwa-native-dispatch-v16';
 const SHELL = ['./', './index.html', './game.html', './manifest.webmanifest', './pwa.css', './pwa-loader.js', './app.js', './mobile-runtime.js', './mobile-menu.js', './diagnostics.js','./audio-lifecycle.js', './mobile-ui.css', './remote-files.js', './content-manifest.json', './content-verify.js', './runtime-worker.js', './aot-browser.json', './aot-runtime.json', './libcocos2dcpp-aot.wasm.gz', './libcocos2dcpp-image.bin.gz', './icons/crossroad-192.png', './icons/crossroad-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL.map(url => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting()));

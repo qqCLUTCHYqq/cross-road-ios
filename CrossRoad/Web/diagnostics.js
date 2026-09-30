@@ -1,5 +1,5 @@
 // Generated mirror of service-worker.js CACHE; scripts/check-build-identity.cjs --write.
-export const DIAGNOSTIC_BUILD = 'v15 / cross-road-pwa-close-probe-v15';
+export const DIAGNOSTIC_BUILD = 'v16 / cross-road-pwa-native-dispatch-v16';
 const DIAGNOSTIC_VERSION = DIAGNOSTIC_BUILD.split(' / ')[0];
 const DIAGNOSTIC_FILENAME = `CrossRoad-diagnostics-${DIAGNOSTIC_VERSION}.txt`;
 
