@@ -81,7 +81,11 @@ Physical-iPhone screenshots will be added here. See [the screenshot folder](docs
 
 ## Credits & Provenance
 
-This project builds on the **preserved Cross Road runtime** and adapts the iPhone/Safari/Home Screen experience. Credit for the original Cross Road work remains with its original author and contributors; this repository does not claim ownership of their work or the original game material.
+### Original Cross Road project — Arena7664
+
+**Cross Road was originally created by [Arena7664](https://github.com/Arena7664), and this iPhone/Safari/PWA adaptation would not exist without that work.** The original Cross Road project is available at [Arena7664/CrossRoad](https://github.com/Arena7664/CrossRoad).
+
+This repository builds on Arena7664's preserved Cross Road runtime and adapts the iPhone/Safari/Home Screen experience. Credit for the original Cross Road runtime and its underlying preservation work belongs to Arena7664 and the original contributors; this repository does not claim ownership of their work or the original game material.
 
 The original runtime's **Thanks and Acknowledgements** remain intact, including KHTomorrow (Purple), Breezyfeather, the Albiel community, KHUxTools, Rellume, Emscripten, Vite, and Svelte. See [the preserved acknowledgements and technical history](TECHNICAL.md#credits-and-acknowledgements).
 
