@@ -1,5 +1,5 @@
 // Generated mirror of service-worker.js CACHE; scripts/check-build-identity.cjs --write.
-export const DIAGNOSTIC_BUILD = 'v14 / cross-road-pwa-audio-recovery-v14';
+export const DIAGNOSTIC_BUILD = 'v15 / cross-road-pwa-close-probe-v15';
 const DIAGNOSTIC_VERSION = DIAGNOSTIC_BUILD.split(' / ')[0];
 const DIAGNOSTIC_FILENAME = `CrossRoad-diagnostics-${DIAGNOSTIC_VERSION}.txt`;
 
@@ -72,8 +72,17 @@ export function installDiagnosticExport(host, readDisplayedLogs) {
     }
     download(report);
   };
+  const probe=document.createElement('button');probe.type='button';
+  probe.textContent='Record Close-control traces';probe.setAttribute('aria-pressed','false');
+  probe.onclick=()=>{
+    globalThis.crossroadCloseProbe=!globalThis.crossroadCloseProbe;
+    probe.setAttribute('aria-pressed',String(globalThis.crossroadCloseProbe));
+    probe.textContent=globalThis.crossroadCloseProbe?'Stop Close-control traces':'Record Close-control traces';
+    status.textContent=globalThis.crossroadCloseProbe?'Close probe 1 recording. Close this menu, tap a working Home control, then reproduce a failing X and export diagnostics. Input behavior is unchanged.':'Close probe 1 stopped. Existing traces remain available to export.';
+    globalThis.safariLog?.('[touch probe] close-probe-1 '+(globalThis.crossroadCloseProbe?'enabled':'disabled'));
+  };
   const live=document.createElement('pre');live.style.whiteSpace='pre-wrap';live.style.overflowWrap='anywhere';
   const update=()=>{live.textContent=audioDiagnosticText();};update();
   setInterval(()=>{if(!document.hidden)update();},1000);
-  actions.append(copy,share);host.prepend(actions,status,live);
+  actions.append(copy,share,probe);host.prepend(actions,status,live);
 }

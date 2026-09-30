@@ -30,11 +30,40 @@ export class MobilePointer {
     target.addEventListener(name, handler, options);
     this.handlers.push(() => target.removeEventListener(name, handler, options));
   }
+  // Opt-in observation only: do not change mapping, capture or event delivery.
+  probe(kind, event, point) {
+    if (kind === 1) this.closeProbe = null;
+    if (!globalThis.crossroadCloseProbe) return null;
+    try {
+      const now = performance.timeOrigin + performance.now();
+      const rect = this.canvas.getBoundingClientRect();
+      const scale = Math.min(rect.width / this.canvas.width, rect.height / this.canvas.height);
+      const left = rect.left + (rect.width - this.canvas.width * scale) / 2;
+      const top = rect.top + (rect.height - this.canvas.height * scale) / 2;
+      const bounds = [rect.left, rect.top, rect.width, rect.height];
+      const raw = event ? [(event.clientX-left)/(this.canvas.width*scale), (event.clientY-top)/(this.canvas.height*scale)] : null;
+      const client = event ? [event.clientX,event.clientY] : null;
+      if (kind === 1) this.closeProbe = {at:now,bounds,client,moves:0,pointer:this.active};
+      const start = this.closeProbe;
+      if (kind === 2 && start) start.moves++;
+      const captured = start?.pointer != null && !!this.canvas.hasPointerCapture?.(start.pointer);
+      const detail = {captureBeforeRelease:captured,sentAt:now,heldMs:start?now-start.at:null,moves:start?.moves??0,
+        rectChanged:!!start && bounds.some((v,i)=>Math.abs(v-start.bounds[i])>.01),
+        raw,inside:point.inside,clamped:!!raw && (raw[0]<0||raw[0]>1||raw[1]<0||raw[1]>1),
+        clientDelta:client&&start?.client?client.map((v,i)=>v-start.client[i]):null};
+      if (kind !== 2 || detail.moves === 1) {
+        const fmt = a => a ? a.map(v=>Number(v.toFixed(3))).join(',') : 'last-point';
+        globalThis.safariLog?.(`[touch probe #${this.sequence}] DOM kind=${kind} source=${event?.type || (event?'Touch':'last-point')} client=${fmt(client)} raw=${fmt(raw)} sent=${fmt([point.x,point.y])} inside=${point.inside} clamped=${detail.clamped} rect=${fmt(bounds)} rectChanged=${detail.rectChanged} heldMs=${detail.heldMs?.toFixed(1)??'-'} moves=${detail.moves} clientDelta=${fmt(detail.clientDelta)} contact=${this.contact??'-'} captureBeforeRelease=${captured}`);
+      }
+      return detail;
+    } catch { return null; } // Diagnostics must never prevent a game event.
+  }
   emit(kind, event) {
     const point = event ? gamePoint(this.canvas, event) : this.last;
     if (!point) return;
     this.last = point;
-    this.post({ type: 'input', kind, x: point.x, y: point.y, inputSequence: this.sequence,
+    const probe = this.probe(kind, event, point);
+    this.post({ type: 'input', kind, x: point.x, y: point.y, inputSequence: this.sequence, ...(probe ? {closeProbe:probe} : {}),
       inputTrace: kind !== 2 || this.traceMoves++ === 0 });
   }
   begin(id, event) {
